@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_dashboard"
+            android:title="@string/navigasi_dashboard"
+            android:icon="@drawable/ic_dashboard_black_24dp"/>
+    </group>
+
+    <item android:title="Report">
+        <menu>
+            <item
+                android:id="@+id/navigation_food"
+                android:title="@string/navigasi_food"
+                android:icon="@drawable/ic_food_black_24dp"/>
+            <item
+                android:id="@+id/navigation_ride"
+                android:title="@string/navigasi_ride"
+                android:icon="@drawable/motorcycle"/>
+            <item
+                android:id="@+id/navigation_express"
+                android:title="@string/navigasi_express"
+                android:icon="@drawable/express"/>
+            <item
+                android:id="@+id/navigation_car"
+                android:title="@string/navigasi_car"
+                android:icon="@drawable/car" />
+            <item
+                android:id="@+id/navigation_payment"
+                android:title="@string/navigasi_payment"
+                android:icon="@drawable/ic_credit_card_black_24dp"/>
+        </menu>
+    </item>
+</menu>
