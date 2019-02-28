@@ -220,7 +220,7 @@
                         android:layout_height="30dp"
                         android:visibility="visible"
                         android:gravity="center"
-                        android:background="@drawable/ic_add_box_black_24dp"/>
+                        android:background="@drawable/ic_add_circle"/>
 
                     <TextView
                         android:id="@+id/id_namacust_defood"

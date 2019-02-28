@@ -93,7 +93,14 @@ public class DeFoodFragment extends Fragment{
         btn_customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datacustomer.setVisibility((datacustomer.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE);
+                if (datacustomer.getVisibility() == View.VISIBLE){
+                    datacustomer.setVisibility(View.GONE) ;
+                    btn_customer.setBackgroundResource(R.drawable.ic_add_circle);
+                } else {
+                    datacustomer.setVisibility(View.VISIBLE);
+                    btn_customer.setBackgroundResource(R.drawable.ic_remove_circle);
+                }
+//                datacustomer.setVisibility((datacustomer.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE);
             }
         });
     }
