@@ -1,10 +1,7 @@
 package com.example.zaki.delivreport;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -50,7 +46,7 @@ public class MainActivity extends AppCompatActivity
                 .into(profilecircleImageView);
 
         if (savedInstanceState == null){
-            Fragment currentFragment = new HomeFragment();
+            Fragment currentFragment = new DashboardFragment();
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content_main, currentFragment)
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.navigation_dashboard){
             title = "Dashboard";
-            fragment = new HomeFragment();
+            fragment = new DashboardFragment();
         } else if (id == R.id.navigation_ride){
             title = "DeRide";
             fragment = new PageFragment();
