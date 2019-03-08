@@ -129,9 +129,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new DeCarFragment();
         } else if (id == R.id.navigation_payment){
             title = "DePayment";
-            fragment = new PageFragment();
-            bundle.putString(PageFragment.EXTRAS,"DePayment");
-            fragment.setArguments(bundle);
+            fragment = new DePaymentFragment();
         }
 
         if (fragment != null){
