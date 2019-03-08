@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
         profilecircleImageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
         Glide.with(MainActivity.this)
-                .load(R.drawable.ic_person_black_24dp)
+                .load(R.drawable.ic_person)
                 .into(profilecircleImageView);
 
         if (savedInstanceState == null){

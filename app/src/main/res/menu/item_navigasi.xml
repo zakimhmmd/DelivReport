@@ -19,15 +19,15 @@
             <item
                 android:id="@+id/navigation_ride"
                 android:title="@string/navigasi_ride"
-                android:icon="@drawable/motorcycle"/>
+                android:icon="@drawable/ic_motorcycle"/>
             <item
                 android:id="@+id/navigation_express"
                 android:title="@string/navigasi_express"
-                android:icon="@drawable/express"/>
+                android:icon="@drawable/ic_express"/>
             <item
                 android:id="@+id/navigation_car"
                 android:title="@string/navigasi_car"
-                android:icon="@drawable/car" />
+                android:icon="@drawable/ic_car" />
             <item
                 android:id="@+id/navigation_payment"
                 android:title="@string/navigasi_payment"

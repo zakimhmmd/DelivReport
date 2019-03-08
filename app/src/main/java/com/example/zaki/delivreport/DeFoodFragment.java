@@ -2,6 +2,7 @@ package com.example.zaki.delivreport;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +20,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.example.zaki.delivreport.Adapter.ListDefoodAdapter;
+import com.example.zaki.delivreport.Model.Defood;
+import com.example.zaki.delivreport.Model.DefoodData;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -30,8 +38,10 @@ public class DeFoodFragment extends Fragment{
     Calendar calendar;
     DatePickerDialog.OnDateSetListener startdate, enddate;
     EditText edt_startdate, edt_enddate;
-    Button btn_customer;
+    Button btn_customer, btn_detail;
     CardView datacustomer;
+    RecyclerView recyclerView;
+    private ArrayList<Defood> list = new ArrayList<>();
 
     public DeFoodFragment() {
         // Required empty public constructor
@@ -50,6 +60,12 @@ public class DeFoodFragment extends Fragment{
         edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDefood);
         btn_customer = (Button) view.findViewById(R.id.btn_namacust_defood);
         datacustomer = (CardView) view.findViewById(R.id.data_customerdefood);
+        btn_detail = (Button) view.findViewById(R.id.btn_detail);
+
+        recyclerView = view.findViewById(R.id.rv_transaksidefood);
+        recyclerView.setHasFixedSize(true);
+        list.addAll(DefoodData.getListData());
+        showRecyclerList();
 
         calendar = Calendar.getInstance();
         startdate = new DatePickerDialog.OnDateSetListener() {
@@ -90,18 +106,6 @@ public class DeFoodFragment extends Fragment{
             }
         });
 
-        btn_customer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (datacustomer.getVisibility() == View.VISIBLE){
-                    btn_customer.setBackgroundResource(R.drawable.ic_add_circle);
-                    datacustomer.setVisibility(View.GONE) ;
-                } else {
-                    btn_customer.setBackgroundResource(R.drawable.ic_remove_circle);
-                    datacustomer.setVisibility(View.VISIBLE);
-                }
-            }
-        });
     }
 
     private void updateLabelStart(){
@@ -114,5 +118,12 @@ public class DeFoodFragment extends Fragment{
         String dateFormat = "yyyy-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
         edt_enddate.setText(simpleDateFormat.format(calendar.getTime()));
+    }
+
+    private void showRecyclerList(){
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
+        listDefoodAdapter.setListDefood(list);
+        recyclerView.setAdapter(listDefoodAdapter);
     }
 }
