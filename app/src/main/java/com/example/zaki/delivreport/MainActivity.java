@@ -120,17 +120,13 @@ public class MainActivity extends AppCompatActivity
             fragment = new DeRideFragment();
         } else if (id == R.id.navigation_express){
             title = "DeExpress";
-            fragment = new PageFragment();
-            bundle.putString(PageFragment.EXTRAS, "DeExpress");
-            fragment.setArguments(bundle);
+            fragment = new DeExpressFragment();
         } else if (id == R.id.navigation_food){
             title = "DeFood";
             fragment = new DeFoodFragment();
         } else if (id == R.id.navigation_car){
             title = "DeCar";
-            fragment = new PageFragment();
-            bundle.putString(PageFragment.EXTRAS, "DeCar");
-            fragment.setArguments(bundle);
+            fragment = new DeCarFragment();
         } else if (id == R.id.navigation_payment){
             title = "DePayment";
             fragment = new PageFragment();
