@@ -117,9 +117,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new DashboardFragment();
         } else if (id == R.id.navigation_ride){
             title = "DeRide";
-            fragment = new PageFragment();
-            bundle.putString(PageFragment.EXTRAS, "DeRide");
-            fragment.setArguments(bundle);
+            fragment = new DeRideFragment();
         } else if (id == R.id.navigation_express){
             title = "DeExpress";
             fragment = new PageFragment();

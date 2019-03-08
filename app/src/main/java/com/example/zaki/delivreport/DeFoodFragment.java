@@ -2,21 +2,15 @@ package com.example.zaki.delivreport;
 
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -38,8 +32,6 @@ public class DeFoodFragment extends Fragment{
     Calendar calendar;
     DatePickerDialog.OnDateSetListener startdate, enddate;
     EditText edt_startdate, edt_enddate;
-    Button btn_customer, btn_detail;
-    CardView datacustomer;
     RecyclerView recyclerView;
     private ArrayList<Defood> list = new ArrayList<>();
 
@@ -58,11 +50,8 @@ public class DeFoodFragment extends Fragment{
 
         edt_startdate = (EditText) view.findViewById(R.id.edt_startDateDefood);
         edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDefood);
-        btn_customer = (Button) view.findViewById(R.id.btn_namacust_defood);
-        datacustomer = (CardView) view.findViewById(R.id.data_customerdefood);
-        btn_detail = (Button) view.findViewById(R.id.btn_detail);
-
         recyclerView = view.findViewById(R.id.rv_transaksidefood);
+
         recyclerView.setHasFixedSize(true);
         list.addAll(DefoodData.getListData());
         showRecyclerList();

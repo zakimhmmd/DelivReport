@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="10dp"
-    android:layout_height="wrap_content">
+    android:layout_marginBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,14 +13,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_namacust_defood"
+            android:id="@+id/btn_customerderide"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:background="@drawable/ic_add_circle"/>
 
         <TextView
-            android:id="@+id/id_transaksi_defood"
+            android:id="@+id/id_transaksi_deride"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/data_customerdefood"
+        android:id="@+id/data_customerderide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -55,7 +55,7 @@
                     android:text="No : "/>
 
                 <TextView
-                    android:id="@+id/id_notransaksi_defood"
+                    android:id="@+id/id_notransaksi_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -75,7 +75,7 @@
                     android:text="Customer : "/>
 
                 <TextView
-                    android:id="@+id/id_customer_defood"
+                    android:id="@+id/id_customer_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -95,7 +95,7 @@
                     android:text="Driver : "/>
 
                 <TextView
-                    android:id="@+id/id_driver_defood"
+                    android:id="@+id/id_driver_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -112,50 +112,10 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="Restoran : "/>
-
-                <TextView
-                    android:id="@+id/id_restoran_defood"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="Nama Restoran"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:text="Harga : "/>
-
-                <TextView
-                    android:id="@+id/id_harga_defood"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="Rp. 0000"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:text="Ongkir : "/>
 
                 <TextView
-                    android:id="@+id/id_ongkir_defood"
+                    android:id="@+id/id_ongkir_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -175,7 +135,7 @@
                     android:text="Status : "/>
 
                 <TextView
-                    android:id="@+id/id_status_defood"
+                    android:id="@+id/id_status_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -195,24 +155,12 @@
                     android:text="Tanggal Pesanan : "/>
 
                 <TextView
-                    android:id="@+id/id_tanggal_defood"
+                    android:id="@+id/id_tanggal_deride"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="Senin, 30 Februari 2019 13:13:13"/>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:textColor="@color/white"
-                android:text="Lihat Detail"
-                android:background="@drawable/shape"
-                android:layout_gravity="center"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
 </LinearLayout>

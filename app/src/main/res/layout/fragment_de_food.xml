@@ -61,6 +61,7 @@
                         android:text="Booking"/>
 
                     <TextView
+                        android:id="@+id/id_bookingdefood"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -97,6 +98,7 @@
                         android:text="Complete"/>
 
                     <TextView
+                        android:id="@+id/id_completedefood"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -134,6 +136,7 @@
                         android:text="Cancel"/>
 
                     <TextView
+                        android:id="@+id/id_canceldefood"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -196,6 +199,7 @@
                     android:focusable="false"/>
 
                 <Button
+                    android:id="@+id/btn_terapkandefood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -204,7 +208,7 @@
                     android:background="@drawable/shape" />
 
                 <EditText
-                    android:id="@+id/edt_searchkey"
+                    android:id="@+id/edt_searchkeydefood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -221,7 +225,7 @@
                     tools:listitem="@layout/item_transaksidefood"/>
 
                 <Button
-                    android:id="@+id/btn_result"
+                    android:id="@+id/btn_nextdefood"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
