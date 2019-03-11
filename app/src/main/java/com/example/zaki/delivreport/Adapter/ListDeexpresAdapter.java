@@ -1,9 +1,9 @@
 package com.example.zaki.delivreport.Adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +42,6 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
         holder.id.setText(getListDeexpress().get(position).getId());
-        holder.no.setText(getListDeexpress().get(position).getNo());
         holder.customer.setText(getListDeexpress().get(position).getUser());
         holder.driver.setText(getListDeexpress().get(position).getDriver());
         holder.ongkir.setText(getListDeexpress().get(position).getOngkir());
@@ -69,13 +68,12 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
-        TextView id,no,customer,driver, ongkir,status, tanggal;
+        TextView id,customer,driver, ongkir,status, tanggal;
         Button btncustomer;
         CardView datacustomer;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             id = itemView.findViewById(R.id.id_transaksi_deexpress);
-            no = itemView.findViewById(R.id.id_notransaksi_deexpres);
             customer = itemView.findViewById(R.id.id_user_deexpres);
             driver = itemView.findViewById(R.id.id_driver_deexpres);
             ongkir = itemView.findViewById(R.id.id_ongkir_deexpres);

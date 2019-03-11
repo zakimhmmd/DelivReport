@@ -2,9 +2,9 @@ package com.example.zaki.delivreport.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.zaki.delivreport.DetailActivity;
-import com.example.zaki.delivreport.MainActivity;
-import com.example.zaki.delivreport.Model.Defood;
+import com.example.zaki.delivreport.Model.DefoodListData;
+import com.example.zaki.delivreport.Model.DefoodStats;
 import com.example.zaki.delivreport.R;
 
 import java.util.ArrayList;
@@ -21,17 +21,18 @@ import java.util.ArrayList;
 public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<Defood> listDefood;
+    private ArrayList<DefoodListData> listDefood;
+
 
     public ListDefoodAdapter(Context context) {
         this.context = context;
     }
 
-    public ArrayList<Defood> getListDefood() {
+    public ArrayList<DefoodListData> getListDefood() {
         return listDefood;
     }
 
-    public void setListDefood(ArrayList<Defood> listDefood) {
+    public void setListDefood(ArrayList<DefoodListData> listDefood) {
         this.listDefood = listDefood;
     }
 
@@ -44,15 +45,14 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
-        holder.id.setText(getListDefood().get(position).getId());
-        holder.no.setText(getListDefood().get(position).getNo());
-        holder.customer.setText(getListDefood().get(position).getCustomer());
-        holder.driver.setText(getListDefood().get(position).getDriver());
-        holder.restoran.setText(getListDefood().get(position).getRestoran());
-        holder.harga.setText(getListDefood().get(position).getHarga());
+        holder.id.setText(String.valueOf(getListDefood().get(position).getId()));
+        holder.customer.setText(getListDefood().get(position).getNamaUser());
+        holder.driver.setText(getListDefood().get(position).getNamaDriver());
+        holder.restoran.setText(getListDefood().get(position).getNamaRestoran());
+        holder.harga.setText(String.valueOf(getListDefood().get(position).getFoods()));
         holder.status.setText(getListDefood().get(position).getStatus());
-        holder.ongkir.setText(getListDefood().get(position).getOngkir());
-        holder.tanggal.setText(getListDefood().get(position).getTanggal());
+        holder.ongkir.setText(String.valueOf(getListDefood().get(position).getDelivery()));
+        holder.tanggal.setText(getListDefood().get(position).getUpdatedAt());
         holder.btncustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,19 +82,18 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-        TextView id,no,customer,driver, restoran, harga, ongkir,status, tanggal;
+        TextView id,customer,driver, restoran, harga, ongkir,status, tanggal;
         Button btncustomer, btndetail;
         CardView datacustomer;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             id = itemView.findViewById(R.id.id_transaksi_defood);
-            no = itemView.findViewById(R.id.id_notransaksi_defood);
             customer = itemView.findViewById(R.id.id_customer_defood);
             driver = itemView.findViewById(R.id.id_driver_defood);
             restoran = itemView.findViewById(R.id.id_restoran_defood);
             harga = itemView.findViewById(R.id.id_harga_defood);
-            ongkir = itemView.findViewById(R.id.id_harga_defood);
+            ongkir = itemView.findViewById(R.id.id_ongkir_defood);
             status = itemView.findViewById(R.id.id_status_defood);
             tanggal = itemView.findViewById(R.id.id_tanggal_defood);
             btncustomer = itemView.findViewById(R.id.btn_namacust_defood);

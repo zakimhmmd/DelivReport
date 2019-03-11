@@ -29,7 +29,7 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/data_customerdepay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -202,6 +202,6 @@
                     android:text="Senin, 30 Februari 2019 13:13:13"/>
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

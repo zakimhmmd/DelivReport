@@ -3,20 +3,30 @@ package com.example.zaki.delivreport;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.example.zaki.delivreport.Adapter.ListDerideAdapter;
+import com.example.zaki.delivreport.Model.DefoodListData;
+import com.example.zaki.delivreport.Model.DefoodResponse;
 import com.example.zaki.delivreport.Model.Deride;
 import com.example.zaki.delivreport.Model.DerideData;
+import com.example.zaki.delivreport.Model.DerideListData;
+import com.example.zaki.delivreport.Model.DerideResponse;
+import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,11 +39,13 @@ import java.util.Locale;
  */
 public class DeRideFragment extends Fragment {
 
-    Calendar calendar;
-    DatePickerDialog.OnDateSetListener startdate, enddate;
-    EditText edt_startdate, edt_enddate;
-    RecyclerView recyclerView;
-    private ArrayList<Deride> list = new ArrayList<>();
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener startdate, enddate;
+    private EditText edt_startdate, edt_enddate;
+    private RecyclerView recyclerView;
+    private Button btn_deride;
+
+    private ListDerideAdapter listDerideAdapter = new ListDerideAdapter(getActivity());
 
     public DeRideFragment() {
         // Required empty public constructor
@@ -52,55 +64,39 @@ public class DeRideFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        edt_startdate = (EditText) view.findViewById(R.id.edt_startDatederide);
-        edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDeride);
+        edt_startdate = view.findViewById(R.id.edt_startDatederide);
+        edt_enddate = view.findViewById(R.id.edt_endDateDeride);
         recyclerView = view.findViewById(R.id.rv_transaksideride);
+        btn_deride = view.findViewById(R.id.btn_terapkanderide);
 
         recyclerView.setHasFixedSize(true);
-        list.addAll(DerideData.getListData());
-        showRecyclerList();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         calendar = Calendar.getInstance();
 
-        startdate = new DatePickerDialog.OnDateSetListener(){
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelStart();
-            }
+        startdate = (view12, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelStart();
         };
 
-        enddate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelEnd();
-            }
+        enddate = (view1, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelEnd();
         };
 
-        edt_startdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), startdate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_startdate.setOnClickListener(v -> new DatePickerDialog(getContext(), startdate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        edt_enddate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), enddate,calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_enddate.setOnClickListener(v -> new DatePickerDialog(getContext(), enddate,calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        btn_deride.setOnClickListener(v -> loadData());
     }
 
     private void updateLabelStart(){
@@ -115,10 +111,30 @@ public class DeRideFragment extends Fragment {
         edt_enddate.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void showRecyclerList(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ListDerideAdapter listDerideAdapter = new ListDerideAdapter(getActivity());
-        listDerideAdapter.setListDeride(list);
-        recyclerView.setAdapter(listDerideAdapter);
+    private void loadData(){
+        String from = edt_startdate.getText().toString();
+        String to = edt_enddate.getText().toString();
+
+        Api.getApiService().getDataDeride(from, to).enqueue(new Callback<DerideResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<DerideResponse> call, @NonNull Response<DerideResponse> response) {
+                if (response.isSuccessful()){
+
+                    ArrayList<DerideListData> list = null;
+                    if (response.body() != null) {
+                        list = response.body().getData().getList();
+                    }
+                    listDerideAdapter.setListDeride(list);
+                    recyclerView.setAdapter(listDerideAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DerideResponse> call, Throwable t) {
+
+            }
+
+        });
+
     }
 }

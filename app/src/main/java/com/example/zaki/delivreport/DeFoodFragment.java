@@ -3,25 +3,32 @@ package com.example.zaki.delivreport;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDefoodAdapter;
-import com.example.zaki.delivreport.Model.Defood;
-import com.example.zaki.delivreport.Model.DefoodData;
+import com.example.zaki.delivreport.Model.DefoodResponse;
+import com.example.zaki.delivreport.Model.DefoodListData;
+import com.example.zaki.delivreport.Model.DefoodStats;
+import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -29,18 +36,19 @@ import java.util.Locale;
  */
 public class DeFoodFragment extends Fragment{
 
-    Calendar calendar;
-    DatePickerDialog.OnDateSetListener startdate, enddate;
-    EditText edt_startdate, edt_enddate;
-    RecyclerView recyclerView;
-    private ArrayList<Defood> list = new ArrayList<>();
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener startdate, enddate;
+    private EditText edt_startdate, edt_enddate;
+    private RecyclerView recyclerView;
+    private ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
 
+    private RecyclerView.Adapter adapter;
     public DeFoodFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_de_food, container, false);
     }
 
@@ -48,53 +56,38 @@ public class DeFoodFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        edt_startdate = (EditText) view.findViewById(R.id.edt_startDateDefood);
-        edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDefood);
+        edt_startdate = view.findViewById(R.id.edt_startDateDefood);
+        edt_enddate = view.findViewById(R.id.edt_endDateDefood);
+        Button btn_tanggal = view.findViewById(R.id.btn_terapkandefood);
         recyclerView = view.findViewById(R.id.rv_transaksidefood);
 
         recyclerView.setHasFixedSize(true);
-        list.addAll(DefoodData.getListData());
-        showRecyclerList();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         calendar = Calendar.getInstance();
-        startdate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelStart();
-            }
+        startdate = (view12, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelStart();
         };
 
-        enddate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelEnd();
-            }
+        enddate = (view1, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelEnd();
         };
 
-        edt_startdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), startdate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_startdate.setOnClickListener(v -> new DatePickerDialog(getContext(), startdate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        edt_enddate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), enddate,calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_enddate.setOnClickListener(v -> new DatePickerDialog(getContext(), enddate,calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        btn_tanggal.setOnClickListener(v -> loadData());
     }
 
     private void updateLabelStart(){
@@ -109,10 +102,34 @@ public class DeFoodFragment extends Fragment{
         edt_enddate.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void showRecyclerList(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
-        listDefoodAdapter.setListDefood(list);
-        recyclerView.setAdapter(listDefoodAdapter);
+
+    private void loadData(){
+        String from = edt_startdate.getText().toString();
+        String to = edt_enddate.getText().toString();
+
+        Api.getApiService().getDataDefood(from, to).enqueue(new Callback<DefoodResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<DefoodResponse> call, @NonNull Response<DefoodResponse> response) {
+
+                if(response.isSuccessful()){
+
+                    ArrayList<DefoodListData> data = null;
+                    if (response.body() != null) {
+                        data = response.body().getData().getList();
+                    }
+
+                    listDefoodAdapter.setListDefood(data);
+                    recyclerView.setAdapter(listDefoodAdapter);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<DefoodResponse> call, Throwable t) {
+
+            }
+        });
     }
+
+
 }

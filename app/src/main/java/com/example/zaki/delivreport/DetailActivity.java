@@ -1,16 +1,15 @@
 package com.example.zaki.delivreport;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zaki.delivreport.Adapter.ListDataBeliAdapter;
 import com.example.zaki.delivreport.Model.Beli;
 import com.example.zaki.delivreport.Model.DataBeli;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 

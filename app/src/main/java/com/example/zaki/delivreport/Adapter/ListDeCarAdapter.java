@@ -1,9 +1,9 @@
 package com.example.zaki.delivreport.Adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +42,6 @@ public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.Cate
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
         holder.id.setText(getListDecar().get(position).getId());
-        holder.no.setText(getListDecar().get(position).getNo());
         holder.customer.setText(getListDecar().get(position).getUser());
         holder.driver.setText(getListDecar().get(position).getDriver());
         holder.ongkir.setText(getListDecar().get(position).getOngkir());
@@ -68,7 +67,7 @@ public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.Cate
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        TextView id,no,customer,driver, ongkir,status, tanggal;
+        TextView id,customer,driver, ongkir,status, tanggal;
         Button btncustomer;
         CardView datacustomer;
 
@@ -76,7 +75,6 @@ public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.Cate
             super(itemView);
 
             id = itemView.findViewById(R.id.id_transaksi_decar);
-            no = itemView.findViewById(R.id.id_notransaksi_decar);
             customer = itemView.findViewById(R.id.id_user_decar);
             driver = itemView.findViewById(R.id.id_driver_decar);
             ongkir = itemView.findViewById(R.id.id_ongkir_decar);
