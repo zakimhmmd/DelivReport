@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.Model.Deexpres;
+import com.example.zaki.delivreport.Model.DeexpressListData;
 import com.example.zaki.delivreport.R;
 
 import java.util.ArrayList;
@@ -18,17 +18,17 @@ import java.util.ArrayList;
 public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<Deexpres> listDeexpress;
+    private ArrayList<DeexpressListData> listDeexpress;
 
     public ListDeexpresAdapter(Context context) {
         this.context = context;
     }
 
-    public ArrayList<Deexpres> getListDeexpress() {
+    public ArrayList<DeexpressListData> getListDeexpress() {
         return listDeexpress;
     }
 
-    public void setListDeexpress(ArrayList<Deexpres> listDeexpress) {
+    public void setListDeexpress(ArrayList<DeexpressListData> listDeexpress) {
         this.listDeexpress = listDeexpress;
     }
 
@@ -41,22 +41,19 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
-        holder.id.setText(getListDeexpress().get(position).getId());
-        holder.customer.setText(getListDeexpress().get(position).getUser());
-        holder.driver.setText(getListDeexpress().get(position).getDriver());
-        holder.ongkir.setText(getListDeexpress().get(position).getOngkir());
+        holder.id.setText(String.valueOf(getListDeexpress().get(position).getId()));
+        holder.customer.setText(getListDeexpress().get(position).getNamaUser());
+        holder.driver.setText(getListDeexpress().get(position).getNamaDriver());
+        holder.ongkir.setText(String.valueOf(getListDeexpress().get(position).getPrice()));
         holder.status.setText(getListDeexpress().get(position).getStatus());
-        holder.tanggal.setText(getListDeexpress().get(position).getTanggal());
-        holder.btncustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.datacustomer.getVisibility() == View.VISIBLE){
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
-                    holder.datacustomer.setVisibility(View.GONE);
-                } else {
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
-                    holder.datacustomer.setVisibility(View.VISIBLE);
-                }
+        holder.tanggal.setText(getListDeexpress().get(position).getCreatedAt());
+        holder.btncustomer.setOnClickListener(v -> {
+            if (holder.datacustomer.getVisibility() == View.VISIBLE){
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
+                holder.datacustomer.setVisibility(View.GONE);
+            } else {
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
+                holder.datacustomer.setVisibility(View.VISIBLE);
             }
         });
     }

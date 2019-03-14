@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.Model.Decar;
+import com.example.zaki.delivreport.Model.DecarListData;
 import com.example.zaki.delivreport.R;
 
 import java.util.ArrayList;
@@ -18,17 +18,17 @@ import java.util.ArrayList;
 public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.CategoryViewHolder>  {
 
     private Context context;
-    private ArrayList<Decar> listDecar;
+    private ArrayList<DecarListData> listDecar;
 
     public ListDeCarAdapter(Context context) {
         this.context = context;
     }
 
-    public ArrayList<Decar> getListDecar() {
+    public ArrayList<DecarListData> getListDecar() {
         return listDecar;
     }
 
-    public void setListDecar(ArrayList<Decar> listDecar) {
+    public void setListDecar(ArrayList<DecarListData> listDecar) {
         this.listDecar = listDecar;
     }
 
@@ -41,22 +41,19 @@ public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.Cate
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
-        holder.id.setText(getListDecar().get(position).getId());
-        holder.customer.setText(getListDecar().get(position).getUser());
-        holder.driver.setText(getListDecar().get(position).getDriver());
-        holder.ongkir.setText(getListDecar().get(position).getOngkir());
+        holder.id.setText(String.valueOf(getListDecar().get(position).getId()));
+        holder.customer.setText(getListDecar().get(position).getNamaUser());
+        holder.driver.setText(getListDecar().get(position).getNamaDriver());
+        holder.ongkir.setText(String.valueOf(getListDecar().get(position).getPrice()));
         holder.status.setText(getListDecar().get(position).getStatus());
-        holder.tanggal.setText(getListDecar().get(position).getTanggal());
-        holder.btncustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.datacustomer.getVisibility() == View.VISIBLE){
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
-                    holder.datacustomer.setVisibility(View.GONE);
-                } else {
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
-                    holder.datacustomer.setVisibility(View.VISIBLE);
-                }
+        holder.tanggal.setText(getListDecar().get(position).getCreatedAt());
+        holder.btncustomer.setOnClickListener(v -> {
+            if (holder.datacustomer.getVisibility() == View.VISIBLE){
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
+                holder.datacustomer.setVisibility(View.GONE);
+            } else {
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
+                holder.datacustomer.setVisibility(View.VISIBLE);
             }
         });
     }

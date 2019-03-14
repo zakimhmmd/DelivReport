@@ -1,6 +1,10 @@
 package com.example.zaki.delivreport;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
@@ -19,7 +23,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     CircleImageView profilecircleImageView;
-
+    SharedPrefManager sharedPrefManager;
     DrawerLayout drawer;
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
@@ -29,15 +33,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sharedPrefManager = new SharedPrefManager(this);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(R.string.app_name);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         profilecircleImageView = navigationView.getHeaderView(0).findViewById(R.id.imageView);
@@ -96,7 +102,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Apakah anda ingin Logout?")
+                    .setCancelable(false)
+                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sharedPrefManager.saveSPBoolean(SharedPrefManager.SP_SUDAH_LOGIN, false);
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class)
+                                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                            finish();
+                        }
+                    }).setNegativeButton("No", null).show();
             return true;
         }
 

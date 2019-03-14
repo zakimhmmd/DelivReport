@@ -7,15 +7,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
-import com.example.zaki.delivreport.Model.Decar;
-import com.example.zaki.delivreport.Model.DecarData;
+import com.example.zaki.delivreport.Model.DecarListData;
+import com.example.zaki.delivreport.Model.DecarResponse;
+import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,12 +30,12 @@ import java.util.Locale;
 
 public class DeCarFragment extends Fragment {
 
-    Calendar calendar;
-    DatePickerDialog.OnDateSetListener startdate, enddate;
-    EditText edt_startdate, edt_enddate;
-    RecyclerView recyclerView;
-    private ArrayList<Decar> list = new ArrayList<>();
-
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener startdate, enddate;
+    private EditText edt_startdate, edt_enddate;
+    private RecyclerView recyclerView;
+    private Button btn_decar;
+    private ListDeCarAdapter listDeCarAdapter = new ListDeCarAdapter(getActivity());
     public DeCarFragment() {
         // Required empty public constructor
     }
@@ -46,55 +51,38 @@ public class DeCarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        edt_startdate = (EditText) view.findViewById(R.id.edt_startDatedecar);
-        edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDecar);
+        edt_startdate = view.findViewById(R.id.edt_startDatedecar);
+        edt_enddate = view.findViewById(R.id.edt_endDateDecar);
         recyclerView = view.findViewById(R.id.rv_transaksidecar);
-
+        btn_decar = view.findViewById(R.id.btn_terapkandecar);
         recyclerView.setHasFixedSize(true);
-        list.addAll(DecarData.getListData());
-        showRecyclerList();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         calendar = Calendar.getInstance();
 
-
-        startdate = new DatePickerDialog.OnDateSetListener(){
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelStart();
-            }
+        startdate = (view1, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelStart();
         };
 
-        enddate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelEnd();
-            }
+        enddate = (view12, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelEnd();
         };
 
-        edt_startdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), startdate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_startdate.setOnClickListener(v -> new DatePickerDialog(getContext(), startdate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        edt_enddate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), enddate,calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_enddate.setOnClickListener(v -> new DatePickerDialog(getContext(), enddate,calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        btn_decar.setOnClickListener(v -> loadData());
     }
 
     private void updateLabelStart(){
@@ -109,10 +97,25 @@ public class DeCarFragment extends Fragment {
         edt_enddate.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void showRecyclerList(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ListDeCarAdapter listDeCarAdapter = new ListDeCarAdapter(getActivity());
-        listDeCarAdapter.setListDecar(list);
-        recyclerView.setAdapter(listDeCarAdapter);
+    private void loadData(){
+        String from = edt_startdate.getText().toString();
+        String to = edt_enddate.getText().toString();
+
+        Api.getApiService().getDataDecar(from, to).enqueue(new Callback<DecarResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<DecarResponse> call, @NonNull Response<DecarResponse> response) {
+                ArrayList<DecarListData> data = null;
+                if (response.body() != null) {
+                    data = response.body().getData().getList();
+                }
+                listDeCarAdapter.setListDecar(data);
+                recyclerView.setAdapter(listDeCarAdapter);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<DecarResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

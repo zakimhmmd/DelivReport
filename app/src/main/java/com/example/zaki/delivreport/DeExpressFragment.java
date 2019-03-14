@@ -8,15 +8,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
 import com.example.zaki.delivreport.Adapter.ListDeexpresAdapter;
-import com.example.zaki.delivreport.Model.Deexpres;
 import com.example.zaki.delivreport.Model.DeexpresData;
+import com.example.zaki.delivreport.Model.DeexpressListData;
+import com.example.zaki.delivreport.Model.DeexpressResponse;
+import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,12 +37,12 @@ import java.util.Locale;
  */
 public class DeExpressFragment extends Fragment {
 
-    Calendar calendar;
-    DatePickerDialog.OnDateSetListener startdate, enddate;
-    EditText edt_startdate, edt_enddate;
-    RecyclerView recyclerView;
-    private ArrayList<Deexpres> list = new ArrayList<>();
-
+    private Calendar calendar;
+    private DatePickerDialog.OnDateSetListener startdate, enddate;
+    private EditText edt_startdate, edt_enddate;
+    private RecyclerView recyclerView;
+    private Button btn_deexpress;
+    private ListDeexpresAdapter listDeexpresAdapter = new ListDeexpresAdapter(getActivity());
     public DeExpressFragment() {
         // Required empty public constructor
     }
@@ -51,54 +59,38 @@ public class DeExpressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        edt_startdate = (EditText) view.findViewById(R.id.edt_startDatedeexpres);
-        edt_enddate = (EditText) view.findViewById(R.id.edt_endDateDedeexpres);
+        edt_startdate = view.findViewById(R.id.edt_startDatedeexpres);
+        edt_enddate = view.findViewById(R.id.edt_endDateDedeexpres);
         recyclerView = view.findViewById(R.id.rv_transaksideexpres);
+        btn_deexpress = view.findViewById(R.id.btn_terapkandeexpres);
 
         recyclerView.setHasFixedSize(true);
-        list.addAll(DeexpresData.getListData());
-        showRecyclerList();
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         calendar = Calendar.getInstance();
 
-        startdate = new DatePickerDialog.OnDateSetListener(){
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelStart();
-            }
+        startdate = (view12, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelStart();
         };
 
-        enddate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabelEnd();
-            }
+        enddate = (view1, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabelEnd();
         };
 
-        edt_startdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), startdate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_startdate.setOnClickListener(v -> new DatePickerDialog(getContext(), startdate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        edt_enddate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(getContext(), enddate,calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        edt_enddate.setOnClickListener(v -> new DatePickerDialog(getContext(), enddate,calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        btn_deexpress.setOnClickListener(v -> loadData());
     }
 
     private void updateLabelStart(){
@@ -113,10 +105,23 @@ public class DeExpressFragment extends Fragment {
         edt_enddate.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void showRecyclerList(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ListDeexpresAdapter listDeexpresAdapter = new ListDeexpresAdapter(getActivity());
-        listDeexpresAdapter.setListDeexpress(list);
-        recyclerView.setAdapter(listDeexpresAdapter);
+    private void loadData(){
+        String from = edt_startdate.getText().toString();
+        String to = edt_enddate.getText().toString();
+
+        Api.getApiService().getDataDeexpress(from, to).enqueue(new Callback<DeexpressResponse>() {
+            @Override
+            public void onResponse(Call<DeexpressResponse> call, Response<DeexpressResponse> response) {
+                ArrayList<DeexpressListData> data = response.body().getData().getList();
+                listDeexpresAdapter.setListDeexpress(data);
+                recyclerView.setAdapter(listDeexpresAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<DeexpressResponse> call, Throwable t) {
+
+            }
+        });
     }
 }
