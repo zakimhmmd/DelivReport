@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.CategoryViewHolder>  {
 
     private Context context;
-    private ArrayList<DecarListData> listDecar;
+    private ArrayList<DecarListData> listDecar = new ArrayList<>();
 
     public ListDeCarAdapter(Context context) {
         this.context = context;
@@ -29,7 +29,9 @@ public class ListDeCarAdapter extends RecyclerView.Adapter<ListDeCarAdapter.Cate
     }
 
     public void setListDecar(ArrayList<DecarListData> listDecar) {
-        this.listDecar = listDecar;
+        this.listDecar.clear();
+        this.listDecar.addAll(listDecar);
+        notifyDataSetChanged();
     }
 
     @NonNull

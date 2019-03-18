@@ -11,6 +11,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,9 @@ import android.widget.TextView;
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
 import com.example.zaki.delivreport.Model.DecarListData;
 import com.example.zaki.delivreport.Model.DecarResponse;
+import com.example.zaki.delivreport.Model.DecarStats;
+import com.example.zaki.delivreport.Model.DefoodListData;
+import com.example.zaki.delivreport.Model.Deride;
 import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
@@ -33,11 +39,13 @@ public class DeCarFragment extends Fragment {
 
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
-    private EditText edt_startdate, edt_enddate;
-    TextView complete, cancel, booking;
+    private EditText edt_startdate, edt_enddate, edt_search;
+    private TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_decar;
     private ListDeCarAdapter listDeCarAdapter = new ListDeCarAdapter(getActivity());
+    private ArrayList<DecarListData> data;
+    private ArrayList<DecarListData> searchResult;
     public DeCarFragment() {
         // Required empty public constructor
     }
@@ -55,13 +63,16 @@ public class DeCarFragment extends Fragment {
 
         edt_startdate = view.findViewById(R.id.edt_startDatedecar);
         edt_enddate = view.findViewById(R.id.edt_endDateDecar);
+        edt_search = view.findViewById(R.id.edt_searchkeydecar);
         recyclerView = view.findViewById(R.id.rv_transaksidecar);
         btn_decar = view.findViewById(R.id.btn_terapkandecar);
         complete = view.findViewById(R.id.id_completedecar);
         cancel = view.findViewById(R.id.id_canceldecar);
         booking = view.findViewById(R.id.id_bookingdecar);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
 
         calendar = Calendar.getInstance();
 
@@ -88,6 +99,8 @@ public class DeCarFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         btn_decar.setOnClickListener(v -> loadData());
+
+        searchData();
     }
 
     private void updateLabelStart(){
@@ -109,7 +122,7 @@ public class DeCarFragment extends Fragment {
         Api.getApiService().getDataDecar(from, to).enqueue(new Callback<DecarResponse>() {
             @Override
             public void onResponse(@NonNull Call<DecarResponse> call, @NonNull Response<DecarResponse> response) {
-                ArrayList<DecarListData> data = null;
+                data = null;
                 if (response.body() != null) {
                     data = response.body().getData().getList();
                     complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
@@ -126,5 +139,37 @@ public class DeCarFragment extends Fragment {
 
             }
         });
+    }
+
+    private void searchData(){
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listDeCarAdapter.setListDecar(linearSearch(data, s.toString()));
+            }
+        });
+    }
+
+    private ArrayList<DecarListData> linearSearch(ArrayList<DecarListData> list, String key){
+        ArrayList<DecarListData> result = new ArrayList<>();
+        if(TextUtils.isEmpty(key)){
+            return list;
+        }
+        for(DecarListData data :list){
+            if(String.valueOf(data.getId()).contains(key)){
+                result.add(data);
+            }
+        }
+        return result;
     }
 }

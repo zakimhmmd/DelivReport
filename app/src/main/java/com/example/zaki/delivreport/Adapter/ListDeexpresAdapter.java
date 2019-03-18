@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<DeexpressListData> listDeexpress;
+    private ArrayList<DeexpressListData> listDeexpress = new ArrayList<>();
 
     public ListDeexpresAdapter(Context context) {
         this.context = context;
@@ -29,7 +29,9 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
     }
 
     public void setListDeexpress(ArrayList<DeexpressListData> listDeexpress) {
-        this.listDeexpress = listDeexpress;
+        this.listDeexpress.clear();
+        this.listDeexpress.addAll(listDeexpress);
+        notifyDataSetChanged();
     }
 
     @NonNull

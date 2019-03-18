@@ -12,6 +12,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
 import com.example.zaki.delivreport.Adapter.ListDeexpresAdapter;
+import com.example.zaki.delivreport.Model.DecarListData;
 import com.example.zaki.delivreport.Model.DeexpresData;
 import com.example.zaki.delivreport.Model.DeexpressListData;
 import com.example.zaki.delivreport.Model.DeexpressResponse;
@@ -40,11 +44,12 @@ public class DeExpressFragment extends Fragment {
 
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
-    private EditText edt_startdate, edt_enddate;
+    private EditText edt_startdate, edt_enddate, edt_search;
     private TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_deexpress;
     private ListDeexpresAdapter listDeexpresAdapter = new ListDeexpresAdapter(getActivity());
+    private ArrayList<DeexpressListData> data;
     public DeExpressFragment() {
         // Required empty public constructor
     }
@@ -63,6 +68,7 @@ public class DeExpressFragment extends Fragment {
 
         edt_startdate = view.findViewById(R.id.edt_startDatedeexpres);
         edt_enddate = view.findViewById(R.id.edt_endDateDedeexpres);
+        edt_search = view.findViewById(R.id.edt_searchkeydeexpres);
         recyclerView = view.findViewById(R.id.rv_transaksideexpres);
         btn_deexpress = view.findViewById(R.id.btn_terapkandeexpres);
         complete = view.findViewById(R.id.id_completedeexpress);
@@ -71,6 +77,7 @@ public class DeExpressFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
         calendar = Calendar.getInstance();
 
         startdate = (view12, year, month, dayOfMonth) -> {
@@ -96,6 +103,8 @@ public class DeExpressFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         btn_deexpress.setOnClickListener(v -> loadData());
+
+        searchData();
     }
 
     private void updateLabelStart(){
@@ -117,7 +126,7 @@ public class DeExpressFragment extends Fragment {
         Api.getApiService().getDataDeexpress(from, to).enqueue(new Callback<DeexpressResponse>() {
             @Override
             public void onResponse(@NonNull Call<DeexpressResponse> call, @NonNull Response<DeexpressResponse> response) {
-                ArrayList<DeexpressListData> data = null;
+                data = null;
                 if (response.body() != null) {
                     data = response.body().getData().getList();
                     complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
@@ -134,5 +143,37 @@ public class DeExpressFragment extends Fragment {
 
             }
         });
+    }
+
+    private void searchData(){
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listDeexpresAdapter.setListDeexpress(linearSearch(data, s.toString()));
+            }
+        });
+    }
+
+    private ArrayList<DeexpressListData> linearSearch(ArrayList<DeexpressListData> list, String key){
+        ArrayList<DeexpressListData> result = new ArrayList<>();
+        if(TextUtils.isEmpty(key)){
+            return list;
+        }
+        for(DeexpressListData data :list){
+            if(String.valueOf(data.getId()).contains(key)){
+                result.add(data);
+            }
+        }
+        return result;
     }
 }
