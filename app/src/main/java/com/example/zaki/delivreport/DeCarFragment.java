@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
 import com.example.zaki.delivreport.Model.DecarListData;
@@ -33,6 +34,7 @@ public class DeCarFragment extends Fragment {
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
     private EditText edt_startdate, edt_enddate;
+    TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_decar;
     private ListDeCarAdapter listDeCarAdapter = new ListDeCarAdapter(getActivity());
@@ -55,6 +57,9 @@ public class DeCarFragment extends Fragment {
         edt_enddate = view.findViewById(R.id.edt_endDateDecar);
         recyclerView = view.findViewById(R.id.rv_transaksidecar);
         btn_decar = view.findViewById(R.id.btn_terapkandecar);
+        complete = view.findViewById(R.id.id_completedecar);
+        cancel = view.findViewById(R.id.id_canceldecar);
+        booking = view.findViewById(R.id.id_bookingdecar);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -107,6 +112,10 @@ public class DeCarFragment extends Fragment {
                 ArrayList<DecarListData> data = null;
                 if (response.body() != null) {
                     data = response.body().getData().getList();
+                    complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
+                    cancel.setText(String.valueOf(response.body().getData().getStats().getCancel()));
+                    booking.setText(String.valueOf(response.body().getData().getStats().getBooking()));
+
                 }
                 listDeCarAdapter.setListDecar(data);
                 recyclerView.setAdapter(listDeCarAdapter);

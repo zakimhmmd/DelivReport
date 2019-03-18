@@ -8,6 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,6 @@ import android.widget.TextView;
 import com.example.zaki.delivreport.Adapter.ListDefoodAdapter;
 import com.example.zaki.delivreport.Model.DefoodResponse;
 import com.example.zaki.delivreport.Model.DefoodListData;
-import com.example.zaki.delivreport.Model.DefoodStats;
 import com.example.zaki.delivreport.Rest.Api;
 
 import java.text.SimpleDateFormat;
@@ -38,11 +41,16 @@ public class DeFoodFragment extends Fragment{
 
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
-    private EditText edt_startdate, edt_enddate;
+    private EditText edt_startdate, edt_enddate, edt_cari;
+    private TextView complete, cancel, booking;
+    private Button btn_search, btn_tanggal;
     private RecyclerView recyclerView;
-    private ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
 
-    private RecyclerView.Adapter adapter;
+    private ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
+    private ArrayList<DefoodListData> data;
+    private ArrayList<DefoodListData> searchResult;
+
+
     public DeFoodFragment() {
         // Required empty public constructor
     }
@@ -58,11 +66,17 @@ public class DeFoodFragment extends Fragment{
 
         edt_startdate = view.findViewById(R.id.edt_startDateDefood);
         edt_enddate = view.findViewById(R.id.edt_endDateDefood);
-        Button btn_tanggal = view.findViewById(R.id.btn_terapkandefood);
+        edt_cari = view.findViewById(R.id.edt_searchkeydefood);
+        btn_tanggal = view.findViewById(R.id.btn_terapkandefood);
         recyclerView = view.findViewById(R.id.rv_transaksidefood);
+        complete = view.findViewById(R.id.id_completedefood);
+        cancel = view.findViewById(R.id.id_canceldefood);
+        booking = view.findViewById(R.id.id_bookingdefood);
+        btn_search = view.findViewById(R.id.btnCari);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
 
         calendar = Calendar.getInstance();
         startdate = (view12, year, month, dayOfMonth) -> {
@@ -88,7 +102,10 @@ public class DeFoodFragment extends Fragment{
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         btn_tanggal.setOnClickListener(v -> loadData());
+
+        searchData();
     }
+
 
     private void updateLabelStart(){
         String dateFormat = "yyyy-MM-dd";
@@ -113,13 +130,17 @@ public class DeFoodFragment extends Fragment{
 
                 if(response.isSuccessful()){
 
-                    ArrayList<DefoodListData> data = null;
+                    data = null;
                     if (response.body() != null) {
                         data = response.body().getData().getList();
+                        complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
+                        booking.setText(String.valueOf(response.body().getData().getStats().getBooking()));
+                        cancel.setText(String.valueOf(response.body().getData().getStats().getCancel()));
                     }
 
                     listDefoodAdapter.setListDefood(data);
                     recyclerView.setAdapter(listDefoodAdapter);
+
                 }
 
             }
@@ -129,6 +150,46 @@ public class DeFoodFragment extends Fragment{
 
             }
         });
+    }
+
+    private void searchData(){
+        btn_search.setOnClickListener(v -> {
+            String keySearch = edt_cari.getText().toString();
+
+            searchResult = linearSearch(data, keySearch);
+            listDefoodAdapter.setListDefood(searchResult);
+        });
+
+        edt_cari.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listDefoodAdapter.setListDefood(linearSearch(data, s.toString()));
+            }
+        });
+
+    }
+
+    private ArrayList<DefoodListData> linearSearch(ArrayList<DefoodListData> list, String key){
+        ArrayList<DefoodListData> result = new ArrayList<>();
+        if(TextUtils.isEmpty(key)){
+            return list;
+        }
+        for(DefoodListData data :list){
+            if(String.valueOf(data.getId()).contains(key)){
+                result.add(data);
+            }
+        }
+        return result;
     }
 
 

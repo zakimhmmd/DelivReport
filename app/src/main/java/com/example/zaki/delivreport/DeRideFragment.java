@@ -12,12 +12,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDerideAdapter;
 import com.example.zaki.delivreport.Model.DefoodListData;
@@ -41,12 +45,14 @@ public class DeRideFragment extends Fragment {
 
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
-    private EditText edt_startdate, edt_enddate;
+    private EditText edt_startdate, edt_enddate, edt_search;
     private RecyclerView recyclerView;
-    private Button btn_deride;
+    private Button btn_deride, btn_search;
+    private TextView complete, cancel, booking;
 
     private ListDerideAdapter listDerideAdapter = new ListDerideAdapter(getActivity());
-
+    private ArrayList<DerideListData> searchResult;
+    private ArrayList<DerideListData> data;
     public DeRideFragment() {
         // Required empty public constructor
     }
@@ -66,11 +72,16 @@ public class DeRideFragment extends Fragment {
 
         edt_startdate = view.findViewById(R.id.edt_startDatederide);
         edt_enddate = view.findViewById(R.id.edt_endDateDeride);
+        edt_search = view.findViewById(R.id.edt_searchkeyderide);
         recyclerView = view.findViewById(R.id.rv_transaksideride);
         btn_deride = view.findViewById(R.id.btn_terapkanderide);
+        complete = view.findViewById(R.id.id_completederide);
+        cancel = view.findViewById(R.id.id_cancelderide);
+        booking = view.findViewById(R.id.id_bookingderide);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
 
         calendar = Calendar.getInstance();
 
@@ -97,6 +108,8 @@ public class DeRideFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         btn_deride.setOnClickListener(v -> loadData());
+
+        searchKey();
     }
 
     private void updateLabelStart(){
@@ -120,11 +133,14 @@ public class DeRideFragment extends Fragment {
             public void onResponse(@NonNull Call<DerideResponse> call, @NonNull Response<DerideResponse> response) {
                 if (response.isSuccessful()){
 
-                    ArrayList<DerideListData> list = null;
+                    data = null;
                     if (response.body() != null) {
-                        list = response.body().getData().getList();
+                        data = response.body().getData().getList();
+                        complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
+                        cancel.setText(String.valueOf(response.body().getData().getStats().getCancel()));
+                        booking.setText(String.valueOf(response.body().getData().getStats().getBooking()));
                     }
-                    listDerideAdapter.setListDeride(list);
+                    listDerideAdapter.setListDeride(data);
                     recyclerView.setAdapter(listDerideAdapter);
                 }
             }
@@ -133,8 +149,43 @@ public class DeRideFragment extends Fragment {
             public void onFailure(Call<DerideResponse> call, Throwable t) {
 
             }
-
         });
+    }
 
+    private void searchKey(){
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listDerideAdapter.setListDeride(linearSearch(data, s.toString()));
+            }
+        });
+    }
+
+    private ArrayList<DerideListData> linearSearch(ArrayList<DerideListData> list, String key){
+        ArrayList<DerideListData> result = new ArrayList<>();
+
+        if(TextUtils.isEmpty(key)){
+            return list;
+        }
+
+        for(DerideListData data :list){
+
+            if(String.valueOf(data.getId()).contains(key)){
+                result.add(data);
+            }
+
+        }
+
+        return result;
     }
 }

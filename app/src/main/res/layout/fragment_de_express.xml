@@ -69,8 +69,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="100"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -106,8 +105,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="100"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -144,8 +142,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="0"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

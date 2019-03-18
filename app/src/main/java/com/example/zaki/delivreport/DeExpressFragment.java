@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
 import com.example.zaki.delivreport.Adapter.ListDeexpresAdapter;
@@ -40,6 +41,7 @@ public class DeExpressFragment extends Fragment {
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
     private EditText edt_startdate, edt_enddate;
+    private TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_deexpress;
     private ListDeexpresAdapter listDeexpresAdapter = new ListDeexpresAdapter(getActivity());
@@ -63,6 +65,9 @@ public class DeExpressFragment extends Fragment {
         edt_enddate = view.findViewById(R.id.edt_endDateDedeexpres);
         recyclerView = view.findViewById(R.id.rv_transaksideexpres);
         btn_deexpress = view.findViewById(R.id.btn_terapkandeexpres);
+        complete = view.findViewById(R.id.id_completedeexpress);
+        cancel = view.findViewById(R.id.id_canceldeexpres);
+        booking = view.findViewById(R.id.id_bookingdeexpres);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,15 +116,21 @@ public class DeExpressFragment extends Fragment {
 
         Api.getApiService().getDataDeexpress(from, to).enqueue(new Callback<DeexpressResponse>() {
             @Override
-            public void onResponse(Call<DeexpressResponse> call, Response<DeexpressResponse> response) {
-                ArrayList<DeexpressListData> data = response.body().getData().getList();
+            public void onResponse(@NonNull Call<DeexpressResponse> call, @NonNull Response<DeexpressResponse> response) {
+                ArrayList<DeexpressListData> data = null;
+                if (response.body() != null) {
+                    data = response.body().getData().getList();
+                    complete.setText(String.valueOf(response.body().getData().getStats().getComplete()));
+                    cancel.setText(String.valueOf(response.body().getData().getStats().getCancel()));
+                    booking.setText(String.valueOf(response.body().getData().getStats().getBooking()));
+                }
                 listDeexpresAdapter.setListDeexpress(data);
                 recyclerView.setAdapter(listDeexpresAdapter);
 
             }
 
             @Override
-            public void onFailure(Call<DeexpressResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<DeexpressResponse> call, Throwable t) {
 
             }
         });

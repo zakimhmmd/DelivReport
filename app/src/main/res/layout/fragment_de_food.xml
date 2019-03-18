@@ -68,8 +68,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="100"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -105,8 +104,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="100"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -143,8 +141,7 @@
                         android:layout_marginBottom="8dp"
                         android:textColor="#ffff"
                         android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:text="0"/>
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -206,16 +203,33 @@
                     android:textColor="#ffff"
                     android:text="Terapkan"
                     android:background="@drawable/shape" />
-
-                <EditText
-                    android:id="@+id/edt_searchkeydefood"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:imeOptions="actionSend"
-                    android:background="@drawable/customborder"
-                    android:drawableLeft="@drawable/ic_search_black_24dp"
-                    android:hint="Cari Data"/>
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/edt_searchkeydefood"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:imeOptions="actionSend"
+                        android:background="@drawable/customborder"
+                        android:drawableLeft="@drawable/ic_search_black_24dp"
+                        android:hint="Cari Data"/>
+
+                    <Button
+                        android:id="@+id/btnCari"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/shape"
+                        android:text="cari"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_transaksidefood"

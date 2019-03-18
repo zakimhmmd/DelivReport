@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<DerideListData> listDeride;
+    private ArrayList<DerideListData> listDeride = new ArrayList<>();
 
     public ListDerideAdapter(Context context) {
         this.context = context;
@@ -30,7 +30,9 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
     }
 
     public void setListDeride(ArrayList<DerideListData> listDeride) {
-        this.listDeride = listDeride;
+        this.listDeride.clear();
+        this.listDeride.addAll(listDeride);
+        notifyDataSetChanged();
     }
 
     @NonNull
