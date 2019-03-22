@@ -1,16 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
     tools:context=".MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edt_dateDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customborder"
+                android:drawableRight="@drawable/ic_date_range_black_24dp"
+                android:hint="Tanggal"
+                android:focusableInTouchMode="true"
+                android:cursorVisible="false"
+                android:focusable="false"/>
+
+            <Button
+                android:id="@+id/btn_terapkandashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#ffff"
+                android:text="Terapkan"
+                android:background="@drawable/shape" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#ffff"
+                android:textStyle="bold"
+                android:text="Laporan Transaksi"
+                android:background="@color/colorPrimary"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_transaksi"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textColor="#ffff"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:text="Laporan Driver Harian"
+                android:background="@color/colorPrimary"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_driver"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#ffff"
+                android:textStyle="bold"
+                android:text="Laporan User Harian"
+                android:background="@color/colorPrimary"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_user"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginBottom="12dp"/>
+        </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</LinearLayout>

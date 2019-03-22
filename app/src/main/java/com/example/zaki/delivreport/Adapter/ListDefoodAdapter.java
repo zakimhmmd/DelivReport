@@ -19,7 +19,6 @@ import com.example.zaki.delivreport.DetailActivity;
 import com.example.zaki.delivreport.Model.DefoodListData;
 import com.example.zaki.delivreport.Model.DefoodStats;
 import com.example.zaki.delivreport.R;
-import com.github.mikephil.charting.formatter.DefaultFillFormatter;
 
 import java.util.ArrayList;
 import java.util.List;

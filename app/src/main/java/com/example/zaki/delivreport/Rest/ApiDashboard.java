@@ -6,10 +6,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
-public class Api {
-    public static final String BASE_URL = "http://debug.deliv.co.id:3000/api/admin/list/";
-
+public class ApiDashboard {
+    public static final String BASE_URL ="http://debug.deliv.co.id:3000/api/admin/dashboard/weekly/";
 
     public static ApiInterface getApiService(){
         return new Retrofit.Builder()
@@ -27,5 +25,4 @@ public class Api {
                 .callTimeout(10, TimeUnit.SECONDS)
                 .build();
     }
-
 }

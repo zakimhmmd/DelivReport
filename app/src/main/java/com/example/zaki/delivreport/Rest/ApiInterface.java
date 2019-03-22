@@ -1,5 +1,6 @@
 package com.example.zaki.delivreport.Rest;
 
+import com.example.zaki.delivreport.Model.DashResponse;
 import com.example.zaki.delivreport.Model.DecarResponse;
 import com.example.zaki.delivreport.Model.DeexpressResponse;
 import com.example.zaki.delivreport.Model.DefoodResponse;
@@ -22,4 +23,8 @@ public interface ApiInterface {
 
     @GET("deexpress/{from}/{to}")
     Call<DeexpressResponse> getDataDeexpress(@Path("from") String from, @Path("to") String to);
+
+    @GET("{from}")
+    Call<DashResponse> getDashboardData(@Path("from") String from);
+
 }

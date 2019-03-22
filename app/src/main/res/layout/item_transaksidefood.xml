@@ -190,6 +190,7 @@
                 android:padding="5dp"
                 android:textColor="@color/white"
                 android:text="Lihat Detail"
+                android:visibility="gone"
                 android:background="@drawable/shape"
                 android:layout_gravity="center"/>
         </LinearLayout>

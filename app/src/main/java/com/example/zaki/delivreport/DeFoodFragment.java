@@ -43,7 +43,7 @@ public class DeFoodFragment extends Fragment{
     private DatePickerDialog.OnDateSetListener startdate, enddate;
     private EditText edt_startdate, edt_enddate, edt_cari;
     private TextView complete, cancel, booking;
-    private Button btn_search, btn_tanggal;
+    private Button btn_tanggal;
     private RecyclerView recyclerView;
 
     private ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
@@ -72,7 +72,6 @@ public class DeFoodFragment extends Fragment{
         complete = view.findViewById(R.id.id_completedefood);
         cancel = view.findViewById(R.id.id_canceldefood);
         booking = view.findViewById(R.id.id_bookingdefood);
-        btn_search = view.findViewById(R.id.btnCari);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -153,12 +152,6 @@ public class DeFoodFragment extends Fragment{
     }
 
     private void searchData(){
-        btn_search.setOnClickListener(v -> {
-            String keySearch = edt_cari.getText().toString();
-
-            searchResult = linearSearch(data, keySearch);
-            listDefoodAdapter.setListDefood(searchResult);
-        });
 
         edt_cari.addTextChangedListener(new TextWatcher() {
             @Override
