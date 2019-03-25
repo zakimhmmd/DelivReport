@@ -100,6 +100,7 @@ public class DeCarFragment extends Fragment {
 
         btn_decar.setOnClickListener(v -> loadData());
 
+        loadData();
         searchData();
     }
 
@@ -118,8 +119,22 @@ public class DeCarFragment extends Fragment {
     private void loadData(){
         String from = edt_startdate.getText().toString();
         String to = edt_enddate.getText().toString();
+        String startDate, endDate;
 
-        Api.getApiService().getDataDecar(from, to).enqueue(new Callback<DecarResponse>() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String curDate = dateFormat.format(calendar.getTime());
+
+        if (from.equals("") || to.equals("")){
+            edt_startdate.setText(curDate);
+            edt_enddate.setText(curDate);
+            startDate = curDate;
+            endDate = curDate;
+        } else {
+            startDate = from;
+            endDate = to;
+        }
+        Api.getApiService().getDataDecar(startDate, endDate).enqueue(new Callback<DecarResponse>() {
             @Override
             public void onResponse(@NonNull Call<DecarResponse> call, @NonNull Response<DecarResponse> response) {
                 data = null;

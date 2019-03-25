@@ -221,18 +221,6 @@
                     android:layout_marginTop="10dp"
                     tools:listitem="@layout/item_transaksideride"/>
 
-                <Button
-                    android:id="@+id/btn_nextderide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:textColor="#ffff"
-                    android:elevation="24dp"
-                    android:text="Next Result"
-                    android:visibility="gone"
-                    android:background="@drawable/shape"
-                    android:padding="10dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

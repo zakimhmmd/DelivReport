@@ -104,6 +104,7 @@ public class DeExpressFragment extends Fragment {
 
         btn_deexpress.setOnClickListener(v -> loadData());
 
+        loadData();
         searchData();
     }
 
@@ -122,8 +123,23 @@ public class DeExpressFragment extends Fragment {
     private void loadData(){
         String from = edt_startdate.getText().toString();
         String to = edt_enddate.getText().toString();
+        String startDate, endDate;
 
-        Api.getApiService().getDataDeexpress(from, to).enqueue(new Callback<DeexpressResponse>() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String curDate = dateFormat.format(calendar.getTime());
+
+        if (from.equals("") || to.equals("")){
+            edt_startdate.setText(curDate);
+            edt_enddate.setText(curDate);
+            startDate = curDate;
+            endDate = curDate;
+        } else {
+            startDate = from;
+            endDate = to;
+        }
+
+        Api.getApiService().getDataDeexpress(startDate, endDate).enqueue(new Callback<DeexpressResponse>() {
             @Override
             public void onResponse(@NonNull Call<DeexpressResponse> call, @NonNull Response<DeexpressResponse> response) {
                 data = null;

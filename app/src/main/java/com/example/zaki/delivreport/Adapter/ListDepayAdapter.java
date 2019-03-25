@@ -13,7 +13,12 @@ import android.widget.TextView;
 import com.example.zaki.delivreport.Model.Depay;
 import com.example.zaki.delivreport.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.CategoryViewHolder> {
 
@@ -39,6 +44,22 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
         return new ListDepayAdapter.CategoryViewHolder(itemrow);
     }
 
+    private static String formatDate(String timestamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfResult = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sdfResult.format(date);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull final ListDepayAdapter.CategoryViewHolder holder, int position) {
         holder.id.setText(getListDepay().get(position).getId());
@@ -49,7 +70,7 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
         holder.sell.setText(getListDepay().get(position).getSell());
         holder.buy.setText(getListDepay().get(position).getBuy());
         holder.deskripsi.setText(getListDepay().get(position).getDeskripsi());
-        holder.tanggal.setText(getListDepay().get(position).getTanggal());
+        holder.tanggal.setText(formatDate(getListDepay().get(position).getTanggal()));
         holder.btncustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,15 @@ import com.example.zaki.delivreport.Model.DefoodListData;
 import com.example.zaki.delivreport.Model.DefoodStats;
 import com.example.zaki.delivreport.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
-public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.CategoryViewHolder> implements Filterable {
+public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.CategoryViewHolder> {
 
     private Context context;
     private ArrayList<DefoodListData> listDefood = new ArrayList<>();
@@ -60,7 +65,7 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
         holder.harga.setText(String.valueOf(getListDefood().get(position).getFoods()));
         holder.status.setText(getListDefood().get(position).getStatus());
         holder.ongkir.setText(String.valueOf(getListDefood().get(position).getDelivery()));
-        holder.tanggal.setText(getListDefood().get(position).getUpdatedAt());
+        holder.tanggal.setText(formatDate(getListDefood().get(position).getUpdatedAt()));
         holder.btncustomer.setOnClickListener(v -> {
             if (holder.datacustomer.getVisibility() == View.VISIBLE){
                 holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
@@ -77,57 +82,20 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
         });
     }
 
+    private static String formatDate(String timestamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfResult = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
 
-    public void filter(String keySearch){
-        if (keySearch.isEmpty()){
-            listDefood.addAll(listFilter);
-        } else {
-            for (DefoodListData row : listFilter){
-                String id = String.valueOf(row.getId());
-                if (id.toLowerCase().contains(keySearch.toLowerCase()) ||
-                        row.getNamaUser().toLowerCase().contains(keySearch.toLowerCase()) ||
-                        row.getNamaDriver().toLowerCase().contains(keySearch.toLowerCase())){
-                    listDefood.add(row);
-                }
-            }
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        notifyDataSetChanged();
-    }
 
-
-
-    public Filter getFilter(){
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                String charString = constraint.toString();
-                if (charString.isEmpty()){
-                     listDefood = listFilter;
-                } else {
-                    ArrayList<DefoodListData> filteredList = new ArrayList<>();
-                    for (DefoodListData row : listFilter){
-                        String id = String.valueOf(row.getId());
-                        if (id.toLowerCase().contains(charString.toLowerCase()) ||
-                                row.getNamaUser().toLowerCase().contains(charString.toLowerCase()) ||
-                                row.getNamaDriver().toLowerCase().contains(charString.toLowerCase())){
-                            filteredList.add(row);
-                        }
-                    }
-                    listDefood = filteredList;
-                }
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = listDefood;
-
-                return filterResults;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                listDefood = (ArrayList<DefoodListData>) results.values;
-                notifyDataSetChanged();
-            }
-        };
+        return sdfResult.format(date);
     }
 
     @Override

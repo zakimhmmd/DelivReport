@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.example.zaki.delivreport.Model.DashDrivers;
@@ -102,7 +101,7 @@ public class DashboardFragment extends Fragment {
         String tanggal;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String curDate = dateFormat.format(calendar.getTime());
 
         if (date.equals("")){
@@ -115,8 +114,8 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onResponse(Call<DashResponse> call, Response<DashResponse> response) {
                 if (response.isSuccessful()){
-                    ArrayList<BarDataSet> dataSets;
-                    ArrayList<String> xAxis;
+                    ArrayList<BarDataSet> dataSets = new ArrayList<>();
+                    ArrayList<String> xAxis = new ArrayList<>();
 
                     if (response.body() != null) {
                         dataUsers = response.body().getData().getUsers();
@@ -129,7 +128,6 @@ public class DashboardFragment extends Fragment {
                         yVals.add(new BarEntry(dataYValue, i));
                     }
 
-                    xAxis = new ArrayList<>();
                     for (int i = 0; i <dataUsers.size();i++){
                         DashUsers dashUsers = dataUsers.get(i);
                         String dataXValue = dashUsers.getTanggal();
@@ -138,8 +136,6 @@ public class DashboardFragment extends Fragment {
 
                     BarDataSet dataY = new BarDataSet(yVals, "User");
                     dataY.setColors(ColorTemplate.COLORFUL_COLORS);
-
-                    dataSets = new ArrayList<>();
                     dataSets.add(dataY);
 
                     XAxis xposition = chartUsers.getXAxis();
@@ -169,7 +165,7 @@ public class DashboardFragment extends Fragment {
         String tanggal;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String curDate = dateFormat.format(calendar.getTime());
 
         if (date.equals("")){
@@ -182,8 +178,8 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onResponse(Call<DashResponse> call, Response<DashResponse> response) {
                 if (response.isSuccessful()){
-                    ArrayList<BarDataSet> dataSets;
-                    ArrayList<String> xAxis;
+                    ArrayList<BarDataSet> dataSets = new ArrayList<>();
+                    ArrayList<String> xAxis = new ArrayList<>();
 
                     if (response.body() != null) {
                         dataDrivers = response.body().getData().getDrivers();
@@ -196,7 +192,6 @@ public class DashboardFragment extends Fragment {
                         yVals.add(new BarEntry(dataYValue, i));
                     }
 
-                    xAxis = new ArrayList<>();
                     for (int i = 0; i <dataDrivers.size();i++){
                         DashDrivers dashDrivers = dataDrivers.get(i);
                         String dataXValue = dashDrivers.getTanggal();
@@ -205,8 +200,6 @@ public class DashboardFragment extends Fragment {
 
                     BarDataSet dataY = new BarDataSet(yVals, "Drivers");
                     dataY.setColors(ColorTemplate.COLORFUL_COLORS);
-
-                    dataSets = new ArrayList<>();
                     dataSets.add(dataY);
 
                     XAxis xposition = chartDriver.getXAxis();
@@ -236,7 +229,7 @@ public class DashboardFragment extends Fragment {
         String tanggal;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String curDate = dateFormat.format(calendar.getTime());
 
         if (date.equals("")){
@@ -249,8 +242,8 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onResponse(Call<DashResponse> call, Response<DashResponse> response) {
                 if (response.isSuccessful()){
-                    ArrayList<BarDataSet> dataSets;
-                    ArrayList<String> xAxis;
+                    ArrayList<BarDataSet> dataSets = new ArrayList<>();
+                    ArrayList<String> xAxis = new ArrayList<>();
 
                     if (response.body() != null) {
                         dataTransaksi = response.body().getData().getTrans();
@@ -266,13 +259,16 @@ public class DashboardFragment extends Fragment {
                         float dataYDefood = Float.parseFloat(String.valueOf(dashTrans.getDefood()));
                         float dataYDeexpress = Float.parseFloat(String.valueOf(dashTrans.getDeexpress()));
                         float dataYDecar = Float.parseFloat(String.valueOf(dashTrans.getDecar()));
+
+                        if (dataYDeride == 0 || dataYDefood == 0 || dataYDeexpress == 0 || dataYDecar == 0){
+
+                        }
                         yVals1.add(new BarEntry(dataYDeride, i));
                         yVals2.add(new BarEntry(dataYDefood, i));
                         yVals3.add(new BarEntry(dataYDeexpress, i));
                         yVals4.add(new BarEntry(dataYDecar, i));
                     }
 
-                    xAxis = new ArrayList<>();
                     for (int i = 0; i <dataTransaksi.size();i++){
                         DashTrans dashTrans = dataTransaksi.get(i);
                         String dataXValue = dashTrans.getTanggal();
@@ -288,7 +284,6 @@ public class DashboardFragment extends Fragment {
                     BarDataSet dataYDecar = new BarDataSet(yVals4, "Decar");
                     dataYDecar.setColors(Collections.singletonList(Color.MAGENTA));
 
-                    dataSets = new ArrayList<>();
                     dataSets.add(dataYDeride);
                     dataSets.add(dataYDefood);
                     dataSets.add(dataYDeexpress);

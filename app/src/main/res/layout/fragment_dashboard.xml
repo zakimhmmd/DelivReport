@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborder"
                 android:drawableRight="@drawable/ic_date_range_black_24dp"
-                android:hint="Tanggal"
+                android:hint="Masukkan Tanggal"
                 android:focusableInTouchMode="true"
                 android:cursorVisible="false"
                 android:focusable="false"/>

@@ -109,6 +109,7 @@ public class DeRideFragment extends Fragment {
 
         btn_deride.setOnClickListener(v -> loadData());
 
+        loadData();
         searchKey();
     }
 
@@ -127,8 +128,23 @@ public class DeRideFragment extends Fragment {
     private void loadData(){
         String from = edt_startdate.getText().toString();
         String to = edt_enddate.getText().toString();
+        String startDate, endDate;
 
-        Api.getApiService().getDataDeride(from, to).enqueue(new Callback<DerideResponse>() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String curDate = dateFormat.format(calendar.getTime());
+
+        if (from.equals("") || to.equals("")){
+            edt_startdate.setText(curDate);
+            edt_enddate.setText(curDate);
+            startDate = curDate;
+            endDate = curDate;
+        } else {
+            startDate = from;
+            endDate = to;
+        }
+
+        Api.getApiService().getDataDeride(startDate, endDate).enqueue(new Callback<DerideResponse>() {
             @Override
             public void onResponse(@NonNull Call<DerideResponse> call, @NonNull Response<DerideResponse> response) {
                 if (response.isSuccessful()){

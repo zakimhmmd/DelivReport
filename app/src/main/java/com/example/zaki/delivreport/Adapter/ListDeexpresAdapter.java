@@ -13,7 +13,12 @@ import android.widget.TextView;
 import com.example.zaki.delivreport.Model.DeexpressListData;
 import com.example.zaki.delivreport.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapter.CategoryViewHolder> {
 
@@ -34,6 +39,22 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
         notifyDataSetChanged();
     }
 
+    private static String formatDate(String timestamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfResult = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sdfResult.format(date);
+    }
+
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -48,7 +69,7 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
         holder.driver.setText(getListDeexpress().get(position).getNamaDriver());
         holder.ongkir.setText(String.valueOf(getListDeexpress().get(position).getPrice()));
         holder.status.setText(getListDeexpress().get(position).getStatus());
-        holder.tanggal.setText(getListDeexpress().get(position).getCreatedAt());
+        holder.tanggal.setText(formatDate(getListDeexpress().get(position).getCreatedAt()));
         holder.btncustomer.setOnClickListener(v -> {
             if (holder.datacustomer.getVisibility() == View.VISIBLE){
                 holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);

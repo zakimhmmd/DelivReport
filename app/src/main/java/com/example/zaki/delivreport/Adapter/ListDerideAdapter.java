@@ -14,7 +14,12 @@ import com.example.zaki.delivreport.Model.Deride;
 import com.example.zaki.delivreport.Model.DerideListData;
 import com.example.zaki.delivreport.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.CategoryViewHolder> {
 
@@ -42,6 +47,22 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
         return new CategoryViewHolder(itemrow);
     }
 
+    private static String formatDate(String timestamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfResult = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sdfResult.format(date);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
         holder.id.setText(String.valueOf(getListDeride().get(position).getId()));
@@ -49,7 +70,7 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
         holder.driver.setText(getListDeride().get(position).getNamaDriver());
         holder.ongkir.setText(String.valueOf(getListDeride().get(position).getPrice()));
         holder.status.setText(getListDeride().get(position).getStatus());
-        holder.tanggal.setText(getListDeride().get(position).getTanggal());
+        holder.tanggal.setText(formatDate(getListDeride().get(position).getTanggal()));
         holder.btncustomer.setOnClickListener(v -> {
             if (holder.datacustomer.getVisibility() == View.VISIBLE){
                 holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
