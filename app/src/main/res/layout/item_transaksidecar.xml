@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp">
 
         <Button
             android:id="@+id/btn_customerdecar"
@@ -134,6 +135,16 @@
                     android:textSize="16sp"
                     android:text="Senin, 30 Februari 2019 13:13:13"/>
             </LinearLayout>
+            <Button
+                android:id="@+id/btn_detail_decar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:text="Lihat Detail"
+                android:background="@drawable/shape"
+                android:layout_gravity="center"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.Model.Deride;
-import com.example.zaki.delivreport.Model.DerideListData;
+import com.example.zaki.delivreport.Model.Deride.DerideListData;
 import com.example.zaki.delivreport.R;
 
 import java.text.ParseException;
@@ -25,7 +24,15 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
 
     private Context context;
     private ArrayList<DerideListData> listDeride = new ArrayList<>();
+    private OnItemClickListener clickListener;
 
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        clickListener = listener;
+    }
     public ListDerideAdapter(Context context) {
         this.context = context;
     }
@@ -90,7 +97,7 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
     public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
         TextView id,customer,driver, ongkir,status, tanggal;
-        Button btncustomer;
+        Button btncustomer, btnDetail;
         CardView datacustomer;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,6 +109,16 @@ public class ListDerideAdapter extends RecyclerView.Adapter<ListDerideAdapter.Ca
             tanggal = itemView.findViewById(R.id.id_tanggal_deride);
             btncustomer = itemView.findViewById(R.id.btn_customerderide);
             datacustomer = itemView.findViewById(R.id.data_customerderide);
+            btnDetail = itemView.findViewById(R.id.btn_detail_deride);
+
+            btnDetail.setOnClickListener(v -> {
+                if (clickListener != null){
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION){
+                        clickListener.onItemClick(position);
+                    }
+                }
+            });
         }
     }
 }

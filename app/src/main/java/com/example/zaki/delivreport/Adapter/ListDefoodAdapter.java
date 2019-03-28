@@ -4,28 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.DetailActivity;
-import com.example.zaki.delivreport.Model.DefoodListData;
-import com.example.zaki.delivreport.Model.DefoodStats;
+import com.example.zaki.delivreport.Defood.DetailDefoodActivity;
+import com.example.zaki.delivreport.Model.Defood.DefoodListData;
 import com.example.zaki.delivreport.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -33,8 +29,15 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
 
     private Context context;
     private ArrayList<DefoodListData> listDefood = new ArrayList<>();
-    private ArrayList<DefoodListData> listFilter;
+    private OnItemClickListener clickListener;
 
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        clickListener = listener;
+    }
     public ListDefoodAdapter(Context context) {
         this.context = context;
     }
@@ -58,6 +61,7 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
+
         holder.id.setText(String.valueOf(getListDefood().get(position).getId()));
         holder.customer.setText(getListDefood().get(position).getNamaUser());
         holder.driver.setText(getListDefood().get(position).getNamaDriver());
@@ -74,11 +78,6 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
                 holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
                 holder.datacustomer.setVisibility(View.VISIBLE);
             }
-        });
-
-        holder.btndetail.setOnClickListener(v -> {
-            Intent i = new Intent(v.getContext(), DetailActivity.class);
-            holder.itemView.getContext().startActivity(i);
         });
     }
 
@@ -103,6 +102,7 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
         return listDefood.size();
     }
 
+
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         TextView id,customer,driver, restoran, harga, ongkir,status, tanggal;
@@ -122,6 +122,15 @@ public class ListDefoodAdapter extends RecyclerView.Adapter<ListDefoodAdapter.Ca
             btncustomer = itemView.findViewById(R.id.btn_namacust_defood);
             btndetail = itemView.findViewById(R.id.btn_detail);
             datacustomer = itemView.findViewById(R.id.data_customerdefood);
+
+            btndetail.setOnClickListener(v -> {
+                if (clickListener != null){
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION){
+                        clickListener.onItemClick(position);
+                    }
+                }
+            });
         }
     }
 }

@@ -6,6 +6,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import com.example.zaki.delivreport.Decar.DeCarFragment;
+import com.example.zaki.delivreport.Deexpress.DeExpressFragment;
+import com.example.zaki.delivreport.Defood.DeFoodFragment;
+import com.example.zaki.delivreport.Depayment.DePaymentFragment;
+import com.example.zaki.delivreport.Deride.DeRideFragment;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;

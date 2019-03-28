@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.Model.Depay;
+import com.example.zaki.delivreport.Model.Depayment.DepayList;
+import com.example.zaki.delivreport.Model.Depayment.DepayResponse;
 import com.example.zaki.delivreport.R;
 
 import java.text.ParseException;
@@ -23,18 +24,20 @@ import java.util.TimeZone;
 public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<Depay> listDepay;
+    private ArrayList<DepayList> listDepay = new ArrayList<>();
 
     public ListDepayAdapter(Context context) {
         this.context = context;
     }
 
-    public ArrayList<Depay> getListDepay() {
+    public ArrayList<DepayList> getListDepay() {
         return listDepay;
     }
 
-    public void setListDepay(ArrayList<Depay> listDepay) {
-        this.listDepay = listDepay;
+    public void setListDepay(ArrayList<DepayList> listDepay) {
+        this.listDepay.clear();
+        this.listDepay.addAll(listDepay);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -63,24 +66,21 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
     @Override
     public void onBindViewHolder(@NonNull final ListDepayAdapter.CategoryViewHolder holder, int position) {
         holder.id.setText(getListDepay().get(position).getId());
-        holder.no.setText(getListDepay().get(position).getNo());
-        holder.user.setText(getListDepay().get(position).getUser());
-        holder.layanan.setText(getListDepay().get(position).getLayanan());
+//        holder.no.setText(getListDepay().get(position).getNo());
+        holder.user.setText(getListDepay().get(position).getNamaMember());
+        holder.layanan.setText(getListDepay().get(position).getService());
         holder.status.setText(getListDepay().get(position).getStatus());
-        holder.sell.setText(getListDepay().get(position).getSell());
-        holder.buy.setText(getListDepay().get(position).getBuy());
-        holder.deskripsi.setText(getListDepay().get(position).getDeskripsi());
-        holder.tanggal.setText(formatDate(getListDepay().get(position).getTanggal()));
-        holder.btncustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.datacustomer.getVisibility() == View.VISIBLE){
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
-                    holder.datacustomer.setVisibility(View.GONE);
-                } else {
-                    holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
-                    holder.datacustomer.setVisibility(View.VISIBLE);
-                }
+        holder.sell.setText(String.valueOf(getListDepay().get(position).getSell()));
+        holder.buy.setText(String.valueOf(getListDepay().get(position).getBuy()));
+        holder.deskripsi.setText(getListDepay().get(position).getDescription());
+        holder.tanggal.setText(formatDate(getListDepay().get(position).getDate()));
+        holder.btncustomer.setOnClickListener(v -> {
+            if (holder.datacustomer.getVisibility() == View.VISIBLE){
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_add_circle);
+                holder.datacustomer.setVisibility(View.GONE);
+            } else {
+                holder.btncustomer.setBackgroundResource(R.drawable.ic_remove_circle);
+                holder.datacustomer.setVisibility(View.VISIBLE);
             }
         });
     }

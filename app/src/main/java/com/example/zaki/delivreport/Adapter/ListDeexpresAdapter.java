@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.zaki.delivreport.Model.DeexpressListData;
+import com.example.zaki.delivreport.Model.Deexpress.DeexpressListData;
 import com.example.zaki.delivreport.R;
 
 import java.text.ParseException;
@@ -24,7 +24,15 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
 
     private Context context;
     private ArrayList<DeexpressListData> listDeexpress = new ArrayList<>();
+    private OnItemClickListener clickListener;
 
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        clickListener = listener;
+    }
     public ListDeexpresAdapter(Context context) {
         this.context = context;
     }
@@ -89,7 +97,7 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
     public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
         TextView id,customer,driver, ongkir,status, tanggal;
-        Button btncustomer;
+        Button btncustomer, btndetail;
         CardView datacustomer;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +109,16 @@ public class ListDeexpresAdapter extends RecyclerView.Adapter<ListDeexpresAdapte
             tanggal = itemView.findViewById(R.id.id_tanggal_deexpres);
             btncustomer = itemView.findViewById(R.id.btn_customerdeexpres);
             datacustomer = itemView.findViewById(R.id.data_customerdeexpres);
+            btndetail = itemView.findViewById(R.id.btn_detail_deexpress);
+
+            btndetail.setOnClickListener(v -> {
+                if (clickListener != null){
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION){
+                        clickListener.onItemClick(position);
+                    }
+                }
+            });
         }
     }
 }

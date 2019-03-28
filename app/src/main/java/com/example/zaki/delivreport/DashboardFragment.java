@@ -19,13 +19,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.zaki.delivreport.Model.DashDrivers;
-import com.example.zaki.delivreport.Model.DashResponse;
-import com.example.zaki.delivreport.Model.DashTrans;
-import com.example.zaki.delivreport.Model.DashUsers;
+import com.example.zaki.delivreport.Model.Dashboard.DashDrivers;
+import com.example.zaki.delivreport.Model.Dashboard.DashResponse;
+import com.example.zaki.delivreport.Model.Dashboard.DashTrans;
+import com.example.zaki.delivreport.Model.Dashboard.DashUsers;
 import com.example.zaki.delivreport.Rest.ApiDashboard;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -144,7 +145,14 @@ public class DashboardFragment extends Fragment {
                     xposition.setDrawAxisLine(true);
                     xposition.setDrawGridLines(false);
 
+                    YAxis rightAxis = chartUsers.getAxisRight();
+                    rightAxis.setEnabled(false);
+
                     BarData data = new BarData(xAxis, dataSets);
+                    data.setDrawValues(true);
+                    data.setValueFormatter(new ChartValueFormatter());
+                    data.setValueFormatter(new ChartValueFormatter());
+
                     chartUsers.setData(data);
                     chartUsers.setDescription(null);
                     chartUsers.animateXY(2000, 2000);
@@ -208,7 +216,14 @@ public class DashboardFragment extends Fragment {
                     xposition.setDrawAxisLine(true);
                     xposition.setDrawGridLines(false);
 
+                    YAxis rightAxis = chartDriver.getAxisRight();
+                    rightAxis.setEnabled(false);
+
                     BarData data = new BarData(xAxis, dataSets);
+                    data.setDrawValues(true);
+                    data.setValueFormatter(new ChartValueFormatter());
+                    data.setValueFormatter(new ChartValueFormatter());
+
                     chartDriver.setData(data);
                     chartDriver.setDescription(null);
                     chartDriver.animateXY(2000, 2000);
@@ -260,9 +275,6 @@ public class DashboardFragment extends Fragment {
                         float dataYDeexpress = Float.parseFloat(String.valueOf(dashTrans.getDeexpress()));
                         float dataYDecar = Float.parseFloat(String.valueOf(dashTrans.getDecar()));
 
-                        if (dataYDeride == 0 || dataYDefood == 0 || dataYDeexpress == 0 || dataYDecar == 0){
-
-                        }
                         yVals1.add(new BarEntry(dataYDeride, i));
                         yVals2.add(new BarEntry(dataYDefood, i));
                         yVals3.add(new BarEntry(dataYDeexpress, i));
@@ -295,12 +307,18 @@ public class DashboardFragment extends Fragment {
                     xposition.setDrawAxisLine(true);
                     xposition.setDrawGridLines(false);
 
+                    YAxis rightAxis = chartTransaksi.getAxisRight();
+                    rightAxis.setEnabled(false);
+
                     BarData data = new BarData(xAxis, dataSets);
+                    data.setDrawValues(true);
+                    data.setValueFormatter(new ChartValueFormatter());
+                    data.setValueFormatter(new ChartValueFormatter());
+
                     chartTransaksi.setData(data);
                     chartTransaksi.setDescription(null);
                     chartTransaksi.animateXY(2000, 2000);
                     chartTransaksi.invalidate();
-
                 }
             }
 
@@ -310,6 +328,7 @@ public class DashboardFragment extends Fragment {
             }
         });
     }
+
 
     private void updateDate(){
         String dateFormat = "yyyy-MM-dd";
