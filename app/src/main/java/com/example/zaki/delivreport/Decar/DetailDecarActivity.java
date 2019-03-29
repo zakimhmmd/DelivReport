@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.zaki.delivreport.Model.Deride.DetailDriver;
 import com.example.zaki.delivreport.Model.Deride.DetailResponse;
 import com.example.zaki.delivreport.R;
 import com.example.zaki.delivreport.Rest.ApiDetail;
@@ -73,7 +74,7 @@ public class DetailDecarActivity extends AppCompatActivity {
                 if (response.isSuccessful()){
                     if (response.body() != null){
                         try{
-                            String foto = response.body().getData().getDriver().getSrc().getImage();
+                            DetailDriver foto = response.body().getData().getDriver();
                             String startDate = formatDate(response.body().getData().getStartTime());
                             String endDate = formatDate(response.body().getData().getEndTime());
 
@@ -96,7 +97,11 @@ public class DetailDecarActivity extends AppCompatActivity {
                             namaDriver.setText(response.body().getData().getDriver().getName());
                             noHpDriver.setText(response.body().getData().getDriver().getPhone());
                             jenisKendaraan.setText(response.body().getData().getVehicle());
-                            Picasso.with(DetailDecarActivity.this).load(foto).into(fotoDriver);
+                            if (foto == null){
+                                Picasso.with(DetailDecarActivity.this).load(R.drawable.ic_person).into(fotoDriver);
+                            } else {
+                                Picasso.with(DetailDecarActivity.this).load(foto.getSrc().getImage()).into(fotoDriver);
+                            }
                         } catch (NullPointerException e){
                             e.printStackTrace();
                         }

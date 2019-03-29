@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.zaki.delivreport.Model.Deexpress.DetailDriver;
+import com.example.zaki.delivreport.Model.Deexpress.DetailNota;
 import com.example.zaki.delivreport.Model.Deexpress.DetailResponse;
 import com.example.zaki.delivreport.R;
 import com.example.zaki.delivreport.Rest.ApiDetail;
@@ -78,8 +80,8 @@ public class DetailDeexpressActivity extends AppCompatActivity {
             public void onResponse(Call<DetailResponse> call, Response<DetailResponse> response) {
                     if (response.body() != null){
                         try{
-                            String imgDriver = response.body().getData().getDriver().getSrc().getImage();
-                            String imgNota = response.body().getData().getNota().getImage();
+                            DetailDriver imgDriver = response.body().getData().getDriver();
+                            DetailNota imgNota = response.body().getData().getNota();
                             String startDate = formatDate(response.body().getData().getStartTime());
                             String endDate = formatDate(response.body().getData().getEndTime());
 
@@ -107,8 +109,16 @@ public class DetailDeexpressActivity extends AppCompatActivity {
                             namaDriver.setText(response.body().getData().getDriver().getName());
                             noHpDriver.setText(response.body().getData().getDriver().getPhone());
                             jenisKendaraan.setText(response.body().getData().getVehicle());
-                            Picasso.with(DetailDeexpressActivity.this).load(imgDriver).into(fotoDriver);
-                            Picasso.with(DetailDeexpressActivity.this).load(imgNota).into(fotoNota);
+                            if (imgDriver == null){
+                                Picasso.with(DetailDeexpressActivity.this).load(R.drawable.ic_person).into(fotoDriver);
+                            } else {
+                                Picasso.with(DetailDeexpressActivity.this).load(imgDriver.getSrc().getImage()).into(fotoDriver);
+                            }
+                            if (imgNota == null){
+                                Picasso.with(DetailDeexpressActivity.this).load(R.drawable.ic_image).into(fotoNota);
+                            } else {
+                                Picasso.with(DetailDeexpressActivity.this).load(imgNota.getImage()).into(fotoNota);
+                            }
 
                         }catch (NullPointerException e){
                             e.printStackTrace();

@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zaki.delivreport.Model.Deride.DetailDriver;
 import com.example.zaki.delivreport.Model.Deride.DetailResponse;
+import com.example.zaki.delivreport.Model.Deride.DetailSrc;
 import com.example.zaki.delivreport.R;
 import com.example.zaki.delivreport.Rest.ApiDetail;
 import com.squareup.picasso.Picasso;
@@ -73,7 +75,7 @@ public class DetailDerideActivity extends AppCompatActivity {
                 if (response.isSuccessful()){
                     if (response.body() != null){
                         try {
-                            String foto = response.body().getData().getDriver().getSrc().getImage();
+                            DetailDriver driver = response.body().getData().getDriver();
                             String startDate = formatDate(response.body().getData().getStartTime());
                             String endDate = formatDate(response.body().getData().getEndTime());
 
@@ -96,7 +98,11 @@ public class DetailDerideActivity extends AppCompatActivity {
                             namaDriver.setText(response.body().getData().getDriver().getName());
                             noHpDriver.setText(response.body().getData().getDriver().getPhone());
                             jenisKendaraan.setText(response.body().getData().getVehicle());
-                            Picasso.with(DetailDerideActivity.this).load(foto).into(fotoDriver);
+                            if (driver == null){
+                                Picasso.with(DetailDerideActivity.this).load(R.drawable.ic_image).into(fotoDriver);
+                            } else {
+                                Picasso.with(DetailDerideActivity.this).load(driver.getSrc().getImage()).into(fotoDriver);
+                            }
                         }catch (NullPointerException e){
                             e.printStackTrace();
                         }

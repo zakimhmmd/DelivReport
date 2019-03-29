@@ -17,6 +17,7 @@ import retrofit2.Response;
 import com.example.zaki.delivreport.Adapter.ListDetaiDefoodAdapter;
 import com.example.zaki.delivreport.Model.Defood.DetailData;
 import com.example.zaki.delivreport.Model.Defood.DetailKeranjang;
+import com.example.zaki.delivreport.Model.Defood.DetailNota;
 import com.example.zaki.delivreport.Model.Defood.DetailResponse;
 import com.example.zaki.delivreport.R;
 import com.example.zaki.delivreport.Rest.ApiDetail;
@@ -93,7 +94,7 @@ public class DetailDefoodActivity extends AppCompatActivity {
                     if (response.body() != null) {
                         try {
 
-                            String image = response.body().getData().getNota().getImage();
+                            DetailNota image = response.body().getData().getNota();
                             double harga = response.body().getData().getHargaFinal();
                             double ongkir = response.body().getData().getOngkir();
                             double potongan = response.body().getData().getDiskon();
@@ -114,7 +115,11 @@ public class DetailDefoodActivity extends AppCompatActivity {
                             alasanCancel.setText(response.body().getData().getAlasanCancel());
                             namaUser.setText(response.body().getData().getUser().getName());
                             rentangWaktu.setText(rentangWaktu(startDate, endDate));
-                            Picasso.with(DetailDefoodActivity.this).load(image).into(notaPesan);
+                            if (image == null){
+                                Picasso.with(DetailDefoodActivity.this).load(R.drawable.ic_image).into(notaPesan);
+                            } else {
+                                Picasso.with(DetailDefoodActivity.this).load(image.getImage()).into(notaPesan);
+                            }
                             emailUser.setText(response.body().getData().getUser().getEmail());
                             namaRestoran.setText(response.body().getData().getRestoran().getName());
                             noHpRestoran.setText(response.body().getData().getRestoran().getPhone());
