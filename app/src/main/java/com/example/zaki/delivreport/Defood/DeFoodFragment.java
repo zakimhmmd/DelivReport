@@ -204,7 +204,8 @@ public class DeFoodFragment extends Fragment implements ListDefoodAdapter.OnItem
             return list;
         }
         for(DefoodListData data :list){
-            if(String.valueOf(data.getId()).contains(key)){
+            if(String.valueOf(data.getId()).contains(key) || String.valueOf(data.getNamaDriver()).contains(key)
+                    || String.valueOf(data.getNamaUser()).contains(key)){
                 result.add(data);
             }
         }

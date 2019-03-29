@@ -193,7 +193,8 @@ public class DeCarFragment extends Fragment implements ListDeCarAdapter.OnItemCl
             return list;
         }
         for(DecarListData data :list){
-            if(String.valueOf(data.getId()).contains(key)){
+            if(String.valueOf(data.getId()).contains(key) || String.valueOf(data.getNamaDriver()).contains(key)
+                    || String.valueOf(data.getNamaUser()).contains(key)){
                 result.add(data);
             }
         }

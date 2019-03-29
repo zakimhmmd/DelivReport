@@ -202,9 +202,10 @@ public class DeRideFragment extends Fragment implements ListDerideAdapter.OnItem
             return list;
         }
 
-        for(DerideListData data :list){
+        for(DerideListData data : list){
 
-            if(String.valueOf(data.getId()).contains(key)){
+            if(String.valueOf(data.getId()).contains(key) || String.valueOf(data.getNamaDriver()).contains(key)
+                    || String.valueOf(data.getNamaUser()).contains(key)){
                 result.add(data);
             }
 

@@ -164,7 +164,7 @@ public class DePaymentFragment extends Fragment {
             return list;
         }
         for(DepayList data :list){
-            if(String.valueOf(data.getId()).contains(key)){
+            if(String.valueOf(data.getId()).contains(key) || String.valueOf(data.getNamaMember()).contains(key) ){
                 result.add(data);
             }
         }

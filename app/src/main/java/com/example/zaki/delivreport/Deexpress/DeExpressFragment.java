@@ -197,7 +197,8 @@ public class DeExpressFragment extends Fragment implements ListDeexpresAdapter.O
             return list;
         }
         for(DeexpressListData data :list){
-            if(String.valueOf(data.getId()).contains(key)){
+            if(String.valueOf(data.getId()).contains(key) || String.valueOf(data.getNamaUser()).contains(key)
+                    || String.valueOf(data.getNamaDriver()).contains(key)){
                 result.add(data);
             }
         }
