@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDeCarAdapter;
@@ -44,6 +45,8 @@ public class DeCarFragment extends Fragment implements ListDeCarAdapter.OnItemCl
     private TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_decar;
+    private ProgressBar spiner;
+
     private ListDeCarAdapter listDeCarAdapter = new ListDeCarAdapter(getActivity());
     private ArrayList<DecarListData> data;
     private ArrayList<DecarListData> searchResult;
@@ -70,6 +73,7 @@ public class DeCarFragment extends Fragment implements ListDeCarAdapter.OnItemCl
         complete = view.findViewById(R.id.id_completedecar);
         cancel = view.findViewById(R.id.id_canceldecar);
         booking = view.findViewById(R.id.id_bookingdecar);
+        spiner = view.findViewById(R.id.progressBardecar);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -99,7 +103,11 @@ public class DeCarFragment extends Fragment implements ListDeCarAdapter.OnItemCl
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        btn_decar.setOnClickListener(v -> loadData());
+        btn_decar.setOnClickListener(v -> {
+            spiner.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            loadData();
+        });
 
         loadData();
         searchData();
@@ -138,6 +146,8 @@ public class DeCarFragment extends Fragment implements ListDeCarAdapter.OnItemCl
         Api.getApiService().getDataDecar(startDate, endDate).enqueue(new Callback<DecarResponse>() {
             @Override
             public void onResponse(@NonNull Call<DecarResponse> call, @NonNull Response<DecarResponse> response) {
+                spiner.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 data = null;
                 if (response.body() != null) {
                     listDeCarAdapter.setOnItemClickListener(DeCarFragment.this);

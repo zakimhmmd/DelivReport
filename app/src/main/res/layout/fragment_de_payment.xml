@@ -87,7 +87,7 @@
                         android:textSize="24sp" />
 
                     <TextView
-                        android:id="@+id/id_totalbeli"
+                        android:id="@+id/id_totalbelidepay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 0000"
@@ -108,7 +108,7 @@
                         android:textSize="24sp" />
 
                     <TextView
-                        android:id="@+id/id_totaljual"
+                        android:id="@+id/id_totaljualdepay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rp. 0000"
@@ -132,6 +132,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     tools:listitem="@layout/item_transaksidepay" />
+
+                <ProgressBar
+                    android:id="@+id/progressBardepay"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_gravity="center_horizontal"/>
 
             </LinearLayout>
         </LinearLayout>

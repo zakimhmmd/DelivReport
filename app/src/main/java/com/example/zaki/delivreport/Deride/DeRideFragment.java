@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDerideAdapter;
@@ -48,6 +49,7 @@ public class DeRideFragment extends Fragment implements ListDerideAdapter.OnItem
     private RecyclerView recyclerView;
     private Button btn_deride, btn_search;
     private TextView complete, cancel, booking;
+    private ProgressBar spiner;
 
     private ListDerideAdapter listDerideAdapter = new ListDerideAdapter(getActivity());
     private ArrayList<DerideListData> searchResult;
@@ -77,6 +79,7 @@ public class DeRideFragment extends Fragment implements ListDerideAdapter.OnItem
         complete = view.findViewById(R.id.id_completederide);
         cancel = view.findViewById(R.id.id_cancelderide);
         booking = view.findViewById(R.id.id_bookingderide);
+        spiner = view.findViewById(R.id.progressBarderide);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -106,7 +109,11 @@ public class DeRideFragment extends Fragment implements ListDerideAdapter.OnItem
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        btn_deride.setOnClickListener(v -> loadData());
+        btn_deride.setOnClickListener(v -> {
+            spiner.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            loadData();
+        });
 
         loadData();
         searchKey();
@@ -146,8 +153,9 @@ public class DeRideFragment extends Fragment implements ListDerideAdapter.OnItem
         Api.getApiService().getDataDeride(startDate, endDate).enqueue(new Callback<DerideResponse>() {
             @Override
             public void onResponse(@NonNull Call<DerideResponse> call, @NonNull Response<DerideResponse> response) {
+                spiner.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 if (response.isSuccessful()){
-
                     data = null;
                     if (response.body() != null) {
                         data = response.body().getData().getList();

@@ -70,6 +70,7 @@ public class DetailDefoodActivity extends AppCompatActivity {
         diskon = findViewById(R.id.id_diskon_defood);
         totalFinal = findViewById(R.id.id_totalfinal_defood);
         notaPesan = findViewById(R.id.id_imgnota_defood);
+        rentangWaktu = findViewById(R.id.id_rentangwaktu_defood);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,14 +107,13 @@ public class DetailDefoodActivity extends AppCompatActivity {
                             status.setText(response.body().getData().getStatus());
                             tanggalPesanan.setText(startDate);
                             waktuSelesai.setText(endDate);
-//                        rentangWaktu.setText(rentangWaktu(startDate, endDate));
+                            rentangWaktu.setText(rentangWaktu(startDate, endDate));
                             kota.setText(response.body().getData().getKota().getCityName());
                             metodeBayar.setText(response.body().getData().getPayment());
                             kodeVoucher.setText(response.body().getData().getKode());
                             alasanCancel.setText(response.body().getData().getAlasanCancel());
-                            if (image != null){
-                                namaUser.setText(response.body().getData().getUser().getName());
-                            }
+                            namaUser.setText(response.body().getData().getUser().getName());
+                            rentangWaktu.setText(rentangWaktu(startDate, endDate));
                             Picasso.with(DetailDefoodActivity.this).load(image).into(notaPesan);
                             emailUser.setText(response.body().getData().getUser().getEmail());
                             namaRestoran.setText(response.body().getData().getRestoran().getName());
@@ -164,7 +164,7 @@ public class DetailDefoodActivity extends AppCompatActivity {
     private static String formatTime(String timestamp){
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
         Date date = new Date();
         try {
@@ -178,23 +178,18 @@ public class DetailDefoodActivity extends AppCompatActivity {
     }
 
     private String rentangWaktu(String start, String end){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+
         String rentang = "";
         try {
             Date startDate = simpleDateFormat.parse(formatTime(start));
             Date endDate = simpleDateFormat.parse(formatTime(end));
+
             long difference = endDate.getTime() - startDate.getTime();
-            if(difference<0)
-            {
-                Date dateMax = simpleDateFormat.parse("24:00");
-                Date dateMin = simpleDateFormat.parse("00:00");
-                difference=(dateMax.getTime() -startDate.getTime() )+(endDate.getTime()-dateMin.getTime());
-            }
-            int days = (int) (difference / (1000*60*60*24));
-            int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
-            int min = (int) (difference - (1000*60*60*24*days) - (1000*60*60*hours)) / (1000*60);
-            rentang = hours+" Jam "+min+" Menit"; 
-            
+            int hours = (int) (difference/(1000 * 60 * 60));
+            int minute = (int) ((difference/(1000*60))%60);
+
+            rentang = hours+" Jam "+minute+" Menit";
         } catch (ParseException e){
             e.printStackTrace();
         }

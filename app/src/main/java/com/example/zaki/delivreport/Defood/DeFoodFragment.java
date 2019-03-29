@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDefoodAdapter;
@@ -26,6 +27,7 @@ import com.example.zaki.delivreport.Model.Defood.DefoodListData;
 import com.example.zaki.delivreport.R;
 import com.example.zaki.delivreport.Rest.Api;
 
+import java.nio.file.attribute.GroupPrincipal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +51,7 @@ public class DeFoodFragment extends Fragment implements ListDefoodAdapter.OnItem
     private TextView complete, cancel, booking;
     private Button btn_tanggal;
     private RecyclerView recyclerView;
+    private ProgressBar spinner;
 
     private ListDefoodAdapter listDefoodAdapter = new ListDefoodAdapter(getActivity());
     private ArrayList<DefoodListData> data;
@@ -75,6 +78,7 @@ public class DeFoodFragment extends Fragment implements ListDefoodAdapter.OnItem
         complete = view.findViewById(R.id.id_completedefood);
         cancel = view.findViewById(R.id.id_canceldefood);
         booking = view.findViewById(R.id.id_bookingdefood);
+        spinner = view.findViewById(R.id.progressBardefood);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -103,7 +107,11 @@ public class DeFoodFragment extends Fragment implements ListDefoodAdapter.OnItem
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        btn_tanggal.setOnClickListener(v -> loadData());
+        btn_tanggal.setOnClickListener(v -> {
+            spinner.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            loadData();
+        });
 
         loadData();
         searchData();
@@ -143,10 +151,12 @@ public class DeFoodFragment extends Fragment implements ListDefoodAdapter.OnItem
         }
 
         Api.getApiService().getDataDefood(startDate, endDate).enqueue(new Callback<DefoodResponse>() {
+
             @Override
             public void onResponse(@NonNull Call<DefoodResponse> call, @NonNull Response<DefoodResponse> response) {
-
                 if(response.isSuccessful()){
+                    spinner.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     data = null;
                     if (response.body() != null) {
                         data = response.body().getData().getList();

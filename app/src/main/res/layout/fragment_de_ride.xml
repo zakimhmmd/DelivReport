@@ -221,6 +221,15 @@
                     android:layout_marginTop="10dp"
                     tools:listitem="@layout/item_transaksideride"/>
 
+                <ProgressBar
+                    android:id="@+id/progressBarderide"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_gravity="center_horizontal"/>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

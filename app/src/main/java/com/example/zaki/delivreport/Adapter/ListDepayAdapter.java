@@ -3,13 +3,17 @@ package com.example.zaki.delivreport.Adapter;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.zaki.delivreport.Depayment.DePaymentFragment;
 import com.example.zaki.delivreport.Model.Depayment.DepayList;
 import com.example.zaki.delivreport.Model.Depayment.DepayResponse;
 import com.example.zaki.delivreport.R;
@@ -65,8 +69,8 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
 
     @Override
     public void onBindViewHolder(@NonNull final ListDepayAdapter.CategoryViewHolder holder, int position) {
+
         holder.id.setText(getListDepay().get(position).getId());
-//        holder.no.setText(getListDepay().get(position).getNo());
         holder.user.setText(getListDepay().get(position).getNamaMember());
         holder.layanan.setText(getListDepay().get(position).getService());
         holder.status.setText(getListDepay().get(position).getStatus());
@@ -83,6 +87,15 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
                 holder.datacustomer.setVisibility(View.VISIBLE);
             }
         });
+        for (int i = 0; i <getListDepay().size(); i++){
+            holder.no.setText(String.valueOf(i));
+        }
+        String totalSell = String.valueOf(getTotalSell());
+        String totalBuy = String.valueOf(getTotalBuy());
+        Intent intent = new Intent("totalDepay");
+        intent.putExtra("totalSell", totalSell);
+        intent.putExtra("totalBuy", totalBuy);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     @Override
@@ -90,9 +103,25 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
         return getListDepay().size();
     }
 
+    public double getTotalSell(){
+        double totalSell = 0;
+        for (DepayList list : listDepay){
+            totalSell += list.getSell();
+        }
+        return totalSell;
+    }
+
+    public double getTotalBuy(){
+        double totalBuy = 0;
+        for (DepayList list : listDepay){
+            totalBuy += list.getBuy();
+        }
+        return totalBuy;
+    }
+
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView id, no, user, layanan, status, buy, sell, deskripsi, tanggal;
-        Button btncustomer;
+        Button btncustomer, btnCari;
         CardView datacustomer;
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +136,8 @@ public class ListDepayAdapter extends RecyclerView.Adapter<ListDepayAdapter.Cate
             tanggal = itemView.findViewById(R.id.id_tanggal_depay);
             btncustomer = itemView.findViewById(R.id.btn_customerdepay);
             datacustomer = itemView.findViewById(R.id.data_customerdepay);
+            btnCari = itemView.findViewById(R.id.edt_searchkeydepay);
+
         }
     }
 }

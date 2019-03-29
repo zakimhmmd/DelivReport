@@ -21,10 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDeexpresAdapter;
-import com.example.zaki.delivreport.DetailDeexpressActivity;
 import com.example.zaki.delivreport.Model.Deexpress.DeexpressListData;
 import com.example.zaki.delivreport.Model.Deexpress.DeexpressResponse;
 import com.example.zaki.delivreport.R;
@@ -49,6 +49,8 @@ public class DeExpressFragment extends Fragment implements ListDeexpresAdapter.O
     private TextView complete, cancel, booking;
     private RecyclerView recyclerView;
     private Button btn_deexpress;
+    private ProgressBar spiner;
+
     private ListDeexpresAdapter listDeexpresAdapter = new ListDeexpresAdapter(getActivity());
     private ArrayList<DeexpressListData> data;
     public DeExpressFragment() {
@@ -75,6 +77,7 @@ public class DeExpressFragment extends Fragment implements ListDeexpresAdapter.O
         complete = view.findViewById(R.id.id_completedeexpress);
         cancel = view.findViewById(R.id.id_canceldeexpres);
         booking = view.findViewById(R.id.id_bookingdeexpres);
+        spiner =  view.findViewById(R.id.progressBardeexpress);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -103,7 +106,11 @@ public class DeExpressFragment extends Fragment implements ListDeexpresAdapter.O
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        btn_deexpress.setOnClickListener(v -> loadData());
+        btn_deexpress.setOnClickListener(v -> {
+            spiner.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            loadData();
+        });
 
         loadData();
         searchData();
@@ -143,6 +150,8 @@ public class DeExpressFragment extends Fragment implements ListDeexpresAdapter.O
         Api.getApiService().getDataDeexpress(startDate, endDate).enqueue(new Callback<DeexpressResponse>() {
             @Override
             public void onResponse(@NonNull Call<DeexpressResponse> call, @NonNull Response<DeexpressResponse> response) {
+                spiner.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 data = null;
                 if (response.body() != null) {
                     data = response.body().getData().getList();

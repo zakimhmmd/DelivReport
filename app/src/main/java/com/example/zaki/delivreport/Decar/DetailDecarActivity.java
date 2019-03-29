@@ -74,14 +74,16 @@ public class DetailDecarActivity extends AppCompatActivity {
                     if (response.body() != null){
                         try{
                             String foto = response.body().getData().getDriver().getSrc().getImage();
+                            String startDate = formatDate(response.body().getData().getStartTime());
+                            String endDate = formatDate(response.body().getData().getEndTime());
 
                             pickAddress.setText(response.body().getData().getPickAddress());
                             destAddress.setText(response.body().getData().getDestAddress());
                             jarak.setText(response.body().getData().getDistance());
                             status.setText(response.body().getData().getStatus());
-                            tanggalPesan.setText(formatDate(response.body().getData().getStartTime()));
-                            waktuSelesai.setText(formatDate(response.body().getData().getEndTime()));
-                            rentangWaktu.setText("");
+                            tanggalPesan.setText(startDate);
+                            waktuSelesai.setText(endDate);
+                            rentangWaktu.setText(rentangWaktu(startDate, endDate));
                             ongkir.setText(response.body().getData().getPrice());
                             potongan.setText(response.body().getData().getDiscount());
                             metodeBayar.setText(response.body().getData().getPayment());
@@ -108,6 +110,41 @@ public class DetailDecarActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String rentangWaktu(String start, String end){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+
+        String rentang = "";
+        try {
+            Date startDate = simpleDateFormat.parse(formatTime(start));
+            Date endDate = simpleDateFormat.parse(formatTime(end));
+
+            long difference = endDate.getTime() - startDate.getTime();
+            int hours = (int) (difference/(1000 * 60 * 60));
+            int minute = (int) ((difference/(1000*60))%60);
+
+            rentang = hours+" Jam "+minute+" Menit";
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return rentang;
+    }
+
+    private static String formatTime(String timestamp){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfResult = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+
+        Date date = new Date();
+        try {
+            date = sdf.parse(timestamp);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sdfResult.format(date);
     }
 
     private static String formatDate(String timestamp){

@@ -2,10 +2,15 @@ package com.example.zaki.delivreport.Depayment;
 
 
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -22,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.zaki.delivreport.Adapter.ListDepayAdapter;
 import com.example.zaki.delivreport.Model.Defood.DefoodListData;
@@ -42,11 +49,15 @@ import java.util.Locale;
  */
 public class DePaymentFragment extends Fragment {
 
+    public static final String KEY_SELL = "sell";
+
     private Calendar calendar;
     private DatePickerDialog.OnDateSetListener startdate, enddate;
     private EditText edt_startdate, edt_enddate, edtCari;
+    private TextView totalSell, totalBuy;
     private RecyclerView recyclerView;
     private Button btnTanggal;
+    private ProgressBar spiner;
 
     private ListDepayAdapter listDepayAdapter = new ListDepayAdapter(getActivity());
     private ArrayList<DepayList> data;
@@ -67,11 +78,14 @@ public class DePaymentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        totalBuy = view.findViewById(R.id.id_totalbelidepay);
+        totalSell = view.findViewById(R.id.id_totaljualdepay);
         edt_startdate = view.findViewById(R.id.edt_startDatedepay);
         edt_enddate = view.findViewById(R.id.edt_endDateDepay);
         edtCari = view.findViewById(R.id.edt_searchkeydepay);
         recyclerView = view.findViewById(R.id.rv_transaksidepay);
         btnTanggal = view.findViewById(R.id.btn_terapkandepay);
+        spiner = view.findViewById(R.id.progressBardepay);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -102,13 +116,28 @@ public class DePaymentFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         btnTanggal.setOnClickListener(v -> {
+            spiner.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
             loadData();
         });
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, new IntentFilter("totalDepay"));
 
         loadData();
         searchData();
 
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String sell = intent.getStringExtra("totalSell");
+            String buy = intent.getStringExtra("totalBuy");
+
+            totalSell.setText("Rp"+sell);
+            totalBuy.setText("Rp"+buy);
+        }
+    };
 
     private void searchData(){
         edtCari.addTextChangedListener(new TextWatcher() {
@@ -164,6 +193,8 @@ public class DePaymentFragment extends Fragment {
         Api.getApiService().getDataDepay(startDate, endDate).enqueue(new Callback<DepayResponse>() {
             @Override
             public void onResponse(Call<DepayResponse> call, Response<DepayResponse> response) {
+                spiner.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 if (response.isSuccessful()){
                     data = null;
                     if (response.body() != null){
