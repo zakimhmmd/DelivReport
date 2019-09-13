@@ -7,7 +7,7 @@ Aplikasi ini dibuat dengan menggunakan:
 - RecyclerView
 - Retrofit2
 
-Berikut Screenshot dari tampilan aplikasi:!
+Berikut Screenshot dari tampilan aplikasi:
 
 ![alt text](https://github.com/zakimuhammad/DelivReport/blob/master/foto/photo6206337582669867178.jpg)
 
